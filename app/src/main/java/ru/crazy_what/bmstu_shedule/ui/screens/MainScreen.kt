@@ -18,7 +18,7 @@ import ru.crazy_what.bmstu_shedule.ui.components.LessonsListPrev
 import ru.crazy_what.bmstu_shedule.ui.components.SearchTopAppBarPrev
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL, widthDp = 360, heightDp = 640)
 @Composable
 fun MainScreen() {
     BMSTUScheduleTheme(darkTheme = false) {

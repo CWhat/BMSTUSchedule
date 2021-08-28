@@ -126,7 +126,7 @@ fun DateCircleLine(title: String, list: List<Date>) {
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             list.forEach { date ->
-                Box(modifier = Modifier.padding(8.dp)) {
+                Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
                     DateCircle(date = date)
                 }
             }

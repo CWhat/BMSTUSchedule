@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -89,7 +90,7 @@ fun LessonCard(
             .fillMaxWidth()
             .zIndex(cardZIndex),
         shape = RoundedCornerShape(cardCorner),
-        border = BorderStroke(if (lesson.isSelect) 2.dp else 0.dp, cardColor),
+        border = if (lesson.isSelect) BorderStroke(2.dp, cardColor) else null,
         elevation = cardElevation
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -139,7 +140,9 @@ fun LessonCard(
             Text(
                 modifier = Modifier.padding(16.dp, 0.dp),
                 text = lesson.name,
-                style = titleStyle
+                style = titleStyle,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
             if (lesson.teacher != null) {
                 Text(

@@ -131,7 +131,6 @@ fun SearchTopAppBar(hint: String = "Поиск", onValueChange: (String) -> Unit
             placeholder = {
                 Text(text = hint, style = searchTitleStyle)
             },
-            //textStyle = littleTitleStyle,
             textStyle = searchTitleStyle,
             leadingIcon = {
                 SquareIcon(
@@ -156,7 +155,8 @@ fun SearchTopAppBar(hint: String = "Поиск", onValueChange: (String) -> Unit
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 leadingIconColor = Color.Gray,
-                trailingIconColor = Color.Gray
+                trailingIconColor = Color.Gray,
+                placeholderColor = Color.Gray
             )
         )
     }
