@@ -37,15 +37,37 @@ fun Izmailovo(num: Int): Pair<String, String> = when (num) {
     else -> error("Некорректный номер пары: $num")
 }
 
+// enum class со зданиями
 enum class Building {
     MainBuilding,
     ELB, // УЛК
     SportsComplex,
-    Izmailovo;
-
-    fun getTime(building: Building, num: Int): Pair<String, String> = when (building) {
-        MainBuilding, ELB -> mainBuilding(num)
-        SportsComplex -> sportsComplex(num)
-        Izmailovo -> Izmailovo(num)
-    }
+    Izmailovo,
+    None
 }
+
+fun getTime(building: Building, num: Int): Pair<String, String> = when (building) {
+    Building.MainBuilding, Building.ELB, Building.None -> mainBuilding(num)
+    Building.SportsComplex -> sportsComplex(num)
+    Building.Izmailovo -> Izmailovo(num)
+}
+
+fun getBuildingFromRoom(room: String?): Building {
+    // TODO реализовать
+    return Building.ELB
+}
+
+fun getNumPair(time: String, building: Building): Int {
+    // TODO реализовать
+    return 1
+}
+
+// TODO надо сделать функцию, которая будет конвертировать время в номер пары
+
+/*
+private object InitClass {
+    // Точно ли init блок будет вызываться при запуске приложения?
+    init {
+
+    }
+}*/

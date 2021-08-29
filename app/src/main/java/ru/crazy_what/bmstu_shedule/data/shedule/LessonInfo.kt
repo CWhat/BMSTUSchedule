@@ -10,15 +10,13 @@ data class LessonInfo(
 )
 
 enum class TypeLesson {
-    Seminar, Lecture, Lab // скорее всего, есть еще типы занятий
+    Seminar, Lecture, Lab, None // скорее всего, есть еще типы занятий
 }
 
-// Учебная неделя
-data class StudyWeek(
-    val monday: List<LessonInfo>,
-    val tuesday: List<LessonInfo>,
-    val wednesday: List<LessonInfo>,
-    val thursday: List<LessonInfo>,
-    val friday: List<LessonInfo>,
-    val saturday: List<LessonInfo>
-)
+fun getTypeLesson(type: String?): TypeLesson = when (type) {
+    "сем" -> TypeLesson.Seminar
+    "лек" -> TypeLesson.Lecture
+    "лаб" -> TypeLesson.Lab
+    null -> TypeLesson.None
+    else -> error("Неподдерживаемый тип занятия: $type")
+}
