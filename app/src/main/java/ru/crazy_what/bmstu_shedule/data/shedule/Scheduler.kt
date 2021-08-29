@@ -53,7 +53,15 @@ fun getSemester(date: Calendar): Semester =
 
 // Возвращет номер недели относительно 1 сентября
 fun getWeek(date: Calendar): Int {
-    val calendar = GregorianCalendar(date.get(Calendar.YEAR), Calendar.SEPTEMBER, 1)
-    //return date.weekYear - calendar.weekYear + 1
-    return date.get(Calendar.WEEK_OF_YEAR) - calendar.get(Calendar.WEEK_OF_YEAR) + 1
+    if (date.get(Calendar.MONTH) >= Calendar.SEPTEMBER) {
+        val september1 = GregorianCalendar(date.get(Calendar.YEAR), Calendar.SEPTEMBER, 1)
+        return date.get(Calendar.WEEK_OF_YEAR) - september1.get(Calendar.WEEK_OF_YEAR) + 1
+    } else {
+        val september1 = GregorianCalendar(date.get(Calendar.YEAR) - 1, Calendar.SEPTEMBER, 1)
+        val december31 = GregorianCalendar(date.get(Calendar.YEAR) - 1, Calendar.DECEMBER, 31)
+
+        return date.get(Calendar.WEEK_OF_YEAR) + december31.get(Calendar.WEEK_OF_YEAR) - september1.get(
+            Calendar.WEEK_OF_YEAR
+        ) + 1
+    }
 }
