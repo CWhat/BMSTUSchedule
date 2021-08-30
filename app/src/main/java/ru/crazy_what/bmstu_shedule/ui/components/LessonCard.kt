@@ -108,7 +108,9 @@ fun LessonCard(
                     .padding(start = 16.dp, top = 4.dp, end = 16.dp, 0.dp)
             ) {
                 Text(
-                    text = "${lesson.timeStart}-${lesson.timeEnd}, каб.: ${lesson.room}, ${lesson.type}",
+                    text = "${lesson.timeStart}-${lesson.timeEnd}" +
+                            if (lesson.room != null) ", каб.: ${lesson.room}" else "" +
+                            if (lesson.type != "") ", ${lesson.type}" else "",
                     style = infoStyle
                 )
             }

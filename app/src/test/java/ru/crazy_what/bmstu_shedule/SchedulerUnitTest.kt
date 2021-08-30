@@ -1,6 +1,7 @@
 package ru.crazy_what.bmstu_shedule
 
 import org.junit.Test
+import ru.crazy_what.bmstu_shedule.data.shedule.getMonday
 import ru.crazy_what.bmstu_shedule.data.shedule.getWeek
 import ru.crazy_what.bmstu_shedule.data.shedule.getWeekOfSchoolYear
 import java.util.*
@@ -29,5 +30,19 @@ class SchedulerUnitTest {
 
         // 2 семестр начинается на 24 неделе 8 февраля
         assert(getWeekOfSchoolYear(GregorianCalendar(2021, Calendar.FEBRUARY, 8)) == 24)
+    }
+
+    @Test
+    fun getMonday_isCorrect() {
+        assert(
+            getMonday(
+                // Эта дата является понедельником
+                GregorianCalendar(
+                    2021,
+                    Calendar.AUGUST,
+                    30
+                )
+            ).get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+        )
     }
 }

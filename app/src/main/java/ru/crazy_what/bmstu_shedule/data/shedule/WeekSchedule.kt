@@ -1,7 +1,7 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
 // Учебная неделя
-data class StudyWeek(
+data class WeekSchedule(
     val monday: List<LessonInfo>,
     val tuesday: List<LessonInfo>,
     val wednesday: List<LessonInfo>,

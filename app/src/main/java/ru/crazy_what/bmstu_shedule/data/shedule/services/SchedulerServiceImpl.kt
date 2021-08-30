@@ -114,7 +114,7 @@ class SchedulerServiceImpl : SchedulerService {
                 denominatorList.add(dayOfDenominator)
             }
 
-            val numerator = StudyWeek(
+            val numerator = WeekSchedule(
                 monday = numeratorList[0],
                 tuesday = numeratorList[1],
                 wednesday = numeratorList[2],
@@ -123,7 +123,7 @@ class SchedulerServiceImpl : SchedulerService {
                 saturday = numeratorList[5]
             )
 
-            val denominator = StudyWeek(
+            val denominator = WeekSchedule(
                 monday = denominatorList[0],
                 tuesday = denominatorList[1],
                 wednesday = denominatorList[2],
@@ -132,7 +132,12 @@ class SchedulerServiceImpl : SchedulerService {
                 saturday = denominatorList[5]
             )
 
-            return@withContext ResponseResult.success(Scheduler(numerator, denominator))
+            return@withContext ResponseResult.success(
+                SchedulerImpl(
+                    numerator,
+                    denominator
+                ) as Scheduler
+            )
         }
         return result
     }
@@ -161,9 +166,9 @@ class SchedulerServiceImpl : SchedulerService {
                 } else if (text[0].isDigit() || text == "Каф") {
                     // TODO надо еще парсить Измайлово, но как оно выглядит?
                     // Это аудитория
-                    if (text != "Каф") {
-                        room = text
-                    }
+                    //if (text != "Каф") {
+                    room = text
+                    //}
                 } else {
                     // Остается только преподаватель
                     teacher = text
