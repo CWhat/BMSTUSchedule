@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import ru.crazy_what.bmstu_shedule.data.shedule.*
 
 class SchedulerServiceImpl : SchedulerService {
@@ -11,7 +12,6 @@ class SchedulerServiceImpl : SchedulerService {
     private var groupsMapIsInitialized = false
     private val groupsMap = mutableMapOf<String, String>()
 
-    // TODO надо как-то обрабатывать ошибки (например, отсутствие сети)
     private suspend fun initGroupsMap() {
         val map =
             withContext(Dispatchers.IO) {
@@ -33,6 +33,7 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     override suspend fun groups(): ResponseResult<List<String>> {
+        // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
             if (!groupsMapIsInitialized)
                 initGroupsMap()
@@ -47,6 +48,7 @@ class SchedulerServiceImpl : SchedulerService {
 
     // TODO выглядит слишком страшно, надо бы отрефакторить
     override suspend fun schedule(group: String): ResponseResult<Scheduler> {
+        // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
             if (!groupsMapIsInitialized)
                 initGroupsMap()
@@ -176,7 +178,7 @@ class SchedulerServiceImpl : SchedulerService {
             name = name,
             teacher = teacher,
             room = room,
-            numPair = getNumPair(time, building)
+            numPair = CallManager.getNumPair(building, time)
         )
     }
 }

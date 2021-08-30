@@ -58,7 +58,6 @@ private val fakeData = listOf(
         teacher = "Марчевский И.К.",
         room = "212л",
         messageFromAbove = "через 10ч 23мин",
-        isSelect = true
     ),
     Lesson(
         type = "лек",
@@ -76,7 +75,6 @@ private val fakeData = listOf(
         room = "212л",
         timeProgress = 0.21F,
         messageBelow = "осталось 1ч 15мин",
-        isSelect = true
     )
 )
 
@@ -90,7 +88,9 @@ fun LessonCard(
             .fillMaxWidth()
             .zIndex(cardZIndex),
         shape = RoundedCornerShape(cardCorner),
-        border = if (lesson.isSelect) BorderStroke(2.dp, cardColor) else null,
+        border = if (lesson.messageFromAbove != null || lesson.messageBelow != null)
+            BorderStroke(2.dp, cardColor)
+        else null,
         elevation = cardElevation
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -107,13 +107,6 @@ fun LessonCard(
                     .fillMaxWidth()
                     .padding(start = 16.dp, top = 4.dp, end = 16.dp, 0.dp)
             ) {
-                /*Text(text = "${lesson.timeStart}-${lesson.timeEnd}", style = infoStyle)
-                Text(
-                    modifier = Modifier.padding(32.dp, 0.dp),
-                    text = lesson.room,
-                    style = infoStyle
-                )
-                Text(text = lesson.type, style = infoStyle)*/
                 Text(
                     text = "${lesson.timeStart}-${lesson.timeEnd}, каб.: ${lesson.room}, ${lesson.type}",
                     style = infoStyle

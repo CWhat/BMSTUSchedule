@@ -10,5 +10,4 @@ data class Lesson(
     val timeProgress: Float? = null,
     val messageFromAbove: String? = null,
     val messageBelow: String? = null,
-    val isSelect: Boolean = false
 )

@@ -1,5 +1,6 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,7 +11,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,7 +46,7 @@ fun SimpleListPrev1() {
     BMSTUScheduleTheme {
         SimpleList(
             items = listOf(fakeData[0]),
-            onClick = { })
+            onClick = { _, _ -> })
     }
 }
 
@@ -55,14 +56,14 @@ fun SimpleListPrev2() {
     BMSTUScheduleTheme {
         SimpleList(
             items = fakeData,
-            onClick = { })
+            onClick = { _, _ -> })
     }
 }
 
 private val fakeData =
     listOf("АК", "БМТ", "ИБМ", "ИУ", "Л", "ЛТ", "МТ", "РЛ", "РКТ", "РЛ", "ФН", "Э", "ЮР")
 
-
+// TODO добавить эффект затемнения принажатии
 @Composable
 fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
@@ -92,7 +93,7 @@ fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
 }
 
 @Composable
-fun SimpleList(items: List<String>, onClick: (Int) -> Unit) {
+fun SimpleList(items: List<String>, onClick: (num: Int, item: String) -> Unit) {
     RoundedColumn(count = items.size) { num ->
         Box(modifier = Modifier.padding(16.dp, 8.dp)) {
             Text(
@@ -101,9 +102,79 @@ fun SimpleList(items: List<String>, onClick: (Int) -> Unit) {
                 style = titleStyle
             )
 
-            IconButton(modifier = Modifier.align(Alignment.CenterEnd), onClick = { onClick(num) }) {
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                onClick = { onClick(num, items[num]) }) {
                 SquareIcon(imageVector = Icons.Filled.ArrowForward, contentDescription = "forward")
             }
         }
     }
 }
+
+// TODO добавить список выбора группы
+// Эта хрень не работает
+/*@Composable
+fun GroupSelectionList(groups: List<String>, select: (String) -> Unit) {
+
+    var initialized by remember {
+        mutableStateOf(false)
+    }
+
+    var state: MutableState<GroupSelectionListState>? = null
+
+    if (!initialized) {
+
+        // кафедры, но я не уверен в переводе
+        val chairsToGroups = groups.groupBy { group ->
+            val index = group.indexOfFirst { it == '-' }
+            group.substring(0, index)
+        }
+
+        val facultiesToChairs = groups.groupBy(keySelector = { chair ->
+            val index = chair.indexOfFirst { it.isDigit() }
+            chair.substring(0, index)
+        }, valueTransform = { group ->
+            val index = group.indexOfFirst { it == '-' }
+            group.substring(0, index)
+        })
+
+        for (el in facultiesToChairs.entries)
+            Log.d("MyLog", "${el.key}: ${el.value}")
+
+        state = remember {
+            mutableStateOf(GroupSelectionListState(facultiesToChairs, chairsToGroups))
+        }
+
+        initialized = true
+    }
+
+    //val state = GroupSelectionListState(facultiesToChairs, chairsToGroups)
+
+    if (state != null) {
+        if (state.value.groups != null) {
+            SimpleList(items = state.value.groups!!, onClick = { _, group -> select(group) })
+        } else if (state.value.chairs != null) {
+            SimpleList(
+                items = state.value.chairs!!,
+                onClick = { _, chair -> state.value.groups = state.value.chairsToGroups[chair] })
+        } else {
+            SimpleList(
+                items = state.value.faculties,
+                onClick = { _, faculty ->
+                    Log.d("MyLog", "Нажали на $faculty")
+                    state.value.chairs = state.value.facultiesToChairs[faculty]
+                })
+        }
+    }
+
+    // TODO добавить обработчик нажатия кнопки назад
+
+}
+
+data class GroupSelectionListState(
+    val facultiesToChairs: Map<String, List<String>>,
+    val chairsToGroups: Map<String, List<String>>,
+    val faculties: List<String> = facultiesToChairs.keys.toList(),
+    var chairs: List<String>? = null,
+    var groups: List<String>? = null
+)*/
