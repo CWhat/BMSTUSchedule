@@ -110,7 +110,7 @@ fun LessonCard(
                 Text(
                     text = "${lesson.timeStart}-${lesson.timeEnd}" +
                             if (lesson.room != null) ", каб.: ${lesson.room}" else "" +
-                            if (lesson.type != "") ", ${lesson.type}" else "",
+                                    if (lesson.type != "") ", ${lesson.type}" else "",
                     style = infoStyle
                 )
             }
@@ -178,7 +178,7 @@ fun LessonCard(
 
 @Composable
 fun LessonsList(lessons: List<Lesson>) {
-    LazyColumn {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(lessons) { lesson ->
             Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
                 LessonCard(lesson)
