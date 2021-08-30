@@ -1,5 +1,6 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ fun ScheduleViewer(scheduler: Scheduler) {
         state = pagerState,
         verticalAlignment = Alignment.Top
     ) { pageNum ->
+        Log.d("MyLog", "page: $pageNum")
         val day = scheduler.studyDay(pageNum + 1)
 
         LessonsList(lessons = day)

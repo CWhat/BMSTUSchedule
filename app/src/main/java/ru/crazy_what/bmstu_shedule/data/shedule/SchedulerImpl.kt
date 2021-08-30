@@ -31,7 +31,7 @@ class SchedulerImpl(
         else
             denominator
 
-        val lessonInfoList = when (studyDayNum % 6) {
+        val lessonInfoList = when ((studyDayNum - 1) % 6) {
             0 -> week.monday
             1 -> week.tuesday
             2 -> week.wednesday

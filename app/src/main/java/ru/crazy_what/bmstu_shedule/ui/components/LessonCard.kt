@@ -1,5 +1,6 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,7 +44,7 @@ fun LessonCard2Prev() {
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun LessonsListPrev() {
     LessonsList(lessons = fakeData)
@@ -109,8 +110,8 @@ fun LessonCard(
             ) {
                 Text(
                     text = "${lesson.timeStart}-${lesson.timeEnd}" +
-                            if (lesson.room != null) ", каб.: ${lesson.room}" else "" +
-                                    if (lesson.type != "") ", ${lesson.type}" else "",
+                            (if (lesson.room != null) ", каб.: ${lesson.room}" else "") +
+                            if (lesson.type.isNotEmpty()) ", ${lesson.type}" else "",
                     style = infoStyle
                 )
             }

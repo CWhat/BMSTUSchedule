@@ -120,7 +120,8 @@ fun GroupSelectionList(groups: List<String>, select: (String) -> Unit) {
         mutableStateOf(false)
     }
 
-    var state: MutableState<GroupSelectionListState>? = null
+    //var state: MutableState<GroupSelectionListState>? = null
+    var state: GroupSelectionListState? = null
 
     if (!initialized) {
 
@@ -142,7 +143,8 @@ fun GroupSelectionList(groups: List<String>, select: (String) -> Unit) {
             Log.d("MyLog", "${el.key}: ${el.value}")
 
         state = remember {
-            mutableStateOf(GroupSelectionListState(facultiesToChairs, chairsToGroups))
+            //mutableStateOf(GroupSelectionListState(facultiesToChairs, chairsToGroups))
+            GroupSelectionListState(facultiesToChairs, chairsToGroups)
         }
 
         initialized = true
@@ -151,18 +153,18 @@ fun GroupSelectionList(groups: List<String>, select: (String) -> Unit) {
     //val state = GroupSelectionListState(facultiesToChairs, chairsToGroups)
 
     if (state != null) {
-        if (state.value.groups != null) {
-            SimpleList(items = state.value.groups!!, onClick = { _, group -> select(group) })
-        } else if (state.value.chairs != null) {
+        if (state.groups != null) {
+            SimpleList(items = state.groups!!, onClick = { _, group -> select(group) })
+        } else if (state.chairs != null) {
             SimpleList(
-                items = state.value.chairs!!,
-                onClick = { _, chair -> state.value.groups = state.value.chairsToGroups[chair] })
+                items = state.chairs!!,
+                onClick = { _, chair -> state.groups = state.chairsToGroups[chair] })
         } else {
             SimpleList(
-                items = state.value.faculties,
+                items = state.faculties,
                 onClick = { _, faculty ->
                     Log.d("MyLog", "Нажали на $faculty")
-                    state.value.chairs = state.value.facultiesToChairs[faculty]
+                    state.chairs = state.facultiesToChairs[faculty]
                 })
         }
     }
@@ -177,4 +179,43 @@ data class GroupSelectionListState(
     val faculties: List<String> = facultiesToChairs.keys.toList(),
     var chairs: List<String>? = null,
     var groups: List<String>? = null
-)*/
+)
+
+fun createGroupSelectionList(groups: List<String>): GroupSelectionListState {
+    // кафедры, но я не уверен в переводе
+    val chairsToGroups = groups.groupBy { group ->
+        val index = group.indexOfFirst { it == '-' }
+        group.substring(0, index)
+    }
+
+    val facultiesToChairs = groups.groupBy(keySelector = { chair ->
+        val index = chair.indexOfFirst { it.isDigit() }
+        chair.substring(0, index)
+    }, valueTransform = { group ->
+        val index = group.indexOfFirst { it == '-' }
+        group.substring(0, index)
+    })
+
+    for (el in facultiesToChairs.entries)
+        Log.d("MyLog", "${el.key}: ${el.value}")
+
+    return GroupSelectionListState(facultiesToChairs, chairsToGroups)
+}
+
+@Composable
+fun GroupSelectionList(state: GroupSelectionListState, select: (String) -> Unit) {
+    if (state.groups != null) {
+        SimpleList(items = state.groups!!, onClick = { _, group -> select(group) })
+    } else if (state.chairs != null) {
+        SimpleList(
+            items = state.chairs!!,
+            onClick = { _, chair -> state.groups = state.chairsToGroups[chair] })
+    } else {
+        SimpleList(
+            items = state.faculties,
+            onClick = { _, faculty ->
+                Log.d("MyLog", "Нажали на $faculty")
+                state.chairs = state.facultiesToChairs[faculty]
+            })
+    }
+}*/

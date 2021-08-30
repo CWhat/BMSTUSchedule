@@ -43,14 +43,14 @@ fun BasicBottomAppBarPrev() {
 @Composable
 fun BottomNavBarPrev() {
     BMSTUScheduleTheme {
-        val state = remember { mutableStateOf(2) }
+        val state = remember { mutableStateOf(0) }
         BottomNavBar(
             icons = listOf(
-                Icons.Filled.Notifications,
-                Icons.Filled.Search,
+                //Icons.Filled.Notifications,
                 Icons.Filled.Home,
-                //Icons.Filled.Star,
                 HollowStar,
+                //Icons.Filled.Star,
+                Icons.Filled.Search,
                 Icons.Filled.MoreVert
             ),
             state = state
