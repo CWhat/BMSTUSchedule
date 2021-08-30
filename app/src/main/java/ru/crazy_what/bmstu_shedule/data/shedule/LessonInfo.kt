@@ -10,7 +10,14 @@ data class LessonInfo(
 )
 
 enum class TypeLesson {
-    Seminar, Lecture, Lab, None // скорее всего, есть еще типы занятий
+    Seminar, Lecture, Lab, None; // скорее всего, есть еще типы занятий
+
+    override fun toString(): String = when (this) {
+        Seminar -> "сем"
+        Lecture -> "лек"
+        Lab -> "лаб"
+        None -> ""
+    }
 }
 
 fun getTypeLesson(type: String?): TypeLesson = when (type) {

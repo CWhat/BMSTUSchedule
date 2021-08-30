@@ -1,7 +1,27 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
+import ru.crazy_what.bmstu_shedule.data.Lesson
 import java.util.*
 
+// TODO переименовать
+// Тут отсчет идет с единицы, мне показалось это логичным
+interface SchedulerInterface {
+
+    val numberOfStudyDaysInSemester: Int
+    val numberOfWeeksInSemester: Int
+
+    // null, если сейчас другой семестр
+    // возвращаются именно номера относительно первой недели или первого дня этого семестра
+    val currentWeek: Int?
+    val currentDay: Int?
+
+    fun studyDay(studyDayNum: Int): List<Lesson>
+    fun studyWeek(weekNum: Int): List<StudyDayInfo>
+
+}
+
+// TODO реализовать интерфейс сверху
+// TODO переименовать
 class Scheduler(
     private val numerator: StudyWeek, // числитель
     private val denominator: StudyWeek // знаменатель
@@ -21,27 +41,6 @@ class Scheduler(
     }
 
     fun updateTime() = updateTime(Calendar.getInstance())
-
-    // TODO сделать функцию, которая будет возвращать начало и конец ближайшей следующей пары или текущую, если она сейчас идет
-    // TODO сделать функцию, которая возвращает массив дат, соответсвующих каждому дню выбранной учебной недели
-
-    // Возвращает расписание на следующую неделю, если она есть, иначе null
-    fun nextStudyWeek(): StudyWeek? {
-        if (curWeek == getNumberOfWeeks(curSemester))
-            return null
-
-        curWeek++
-        return studyWeek(curWeek)
-    }
-
-    // Возвращает расписание на предыдущую неделю, если она есть, иначе null
-    fun prevStudyWeek(): StudyWeek? {
-        if (curWeek == 1)
-            return null
-
-        curWeek--
-        return studyWeek(curWeek)
-    }
 
     fun studyWeek(weekNum: Int): StudyWeek {
         if (weekNum < 1)
@@ -78,45 +77,5 @@ class Scheduler(
             5 -> week.saturday
             else -> error("Как такое возможно?")
         }
-    }
-}
-
-// Виды семестров
-enum class Semester {
-    Autumn, // Осенний-зимний
-    Spring // Зимний-весенний
-}
-
-// Выдает вид текущего семестра
-// 2 семестр начинается на 24 неделе
-private fun getSemester(date: Calendar): Semester =
-    if (getWeekOfSchoolYear(date) >= 24)
-        Semester.Spring
-    else
-        Semester.Autumn
-
-private fun getNumberOfWeeks(semester: Semester): Int = when (semester) {
-    Semester.Autumn -> 23
-    Semester.Spring -> 29
-}
-
-// Возвращает номер недели относительно начала семестра
-fun getWeek(date: Calendar): Int = when (getSemester(date)) {
-    Semester.Autumn -> getWeekOfSchoolYear(date)
-    Semester.Spring -> getWeekOfSchoolYear(date) - getNumberOfWeeks(Semester.Autumn)
-}
-
-// Возвращет номер недели относительно 1 сентября
-fun getWeekOfSchoolYear(date: Calendar): Int {
-    return if (date.get(Calendar.MONTH) >= Calendar.SEPTEMBER) {
-        val september1 = GregorianCalendar(date.get(Calendar.YEAR), Calendar.SEPTEMBER, 1)
-        date.get(Calendar.WEEK_OF_YEAR) - september1.get(Calendar.WEEK_OF_YEAR) + 1
-    } else {
-        val september1 = GregorianCalendar(date.get(Calendar.YEAR) - 1, Calendar.SEPTEMBER, 1)
-        val december31 = GregorianCalendar(date.get(Calendar.YEAR) - 1, Calendar.DECEMBER, 31)
-
-        date.get(Calendar.WEEK_OF_YEAR) + december31.get(Calendar.WEEK_OF_YEAR) - september1.get(
-            Calendar.WEEK_OF_YEAR
-        ) + 1
     }
 }

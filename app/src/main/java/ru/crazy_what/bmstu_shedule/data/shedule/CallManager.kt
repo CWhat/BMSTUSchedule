@@ -9,7 +9,7 @@ object CallManager {
 
     // звонки УЛК и ГЗ
     private val mainBuilding = listOf(
-        1 to Pair("8:30", "10:05"),
+        1 to Pair("08:30", "10:05"),
         2 to Pair("10:15", "11:50"),
         3 to Pair("12:00", "13:35"),
         4 to Pair("13:50", "15:25"),
@@ -20,7 +20,7 @@ object CallManager {
 
     // звонки спортивного комплекса
     private val sportsComplex = listOf(
-        1 to Pair("8:15", "9:45"),
+        1 to Pair("08:15", "09:45"),
         2 to Pair("10:00", "11:30"),
         3 to Pair("12:20", "13:50"),
         4 to Pair("14:05", "15:35"),
@@ -30,8 +30,8 @@ object CallManager {
 
     // Измайлова
     private val Izmailovo = listOf(
-        1 to Pair("8:00", "9:30"),
-        2 to Pair("9:35", "11:05"),
+        1 to Pair("08:00", "09:30"),
+        2 to Pair("09:35", "11:05"),
         3 to Pair("11:10", "12:40"),
         4 to Pair("12:45", "14:15"),
         5 to Pair("14:30", "16:00"),

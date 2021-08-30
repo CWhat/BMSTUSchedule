@@ -6,7 +6,17 @@ enum class Building {
     ELB, // УЛК
     SportsComplex,
     Izmailovo,
-    None
+    None;
+
+
+    override fun toString(): String = when (this) {
+        MainBuilding -> "ГЗ"
+        ELB -> "УЛК"
+        SportsComplex -> "СК"
+        Izmailovo -> "Измайлово"
+        None -> ""
+    }
+
 }
 
 fun getBuildingFromRoom(room: String?): Building {

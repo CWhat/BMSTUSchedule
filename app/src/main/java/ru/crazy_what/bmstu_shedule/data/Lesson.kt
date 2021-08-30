@@ -6,7 +6,7 @@ data class Lesson(
     val timeEnd: String,
     val name: String,
     val teacher: String? = null,
-    val room: String,
+    val room: String? = null,
     val timeProgress: Float? = null,
     val messageFromAbove: String? = null,
     val messageBelow: String? = null,

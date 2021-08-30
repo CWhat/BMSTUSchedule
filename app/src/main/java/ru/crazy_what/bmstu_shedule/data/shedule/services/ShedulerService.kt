@@ -11,3 +11,5 @@ interface SchedulerService {
     suspend fun schedule(group: String): ResponseResult<Scheduler>
 
 }
+
+fun SchedulerService() = SchedulerServiceImpl()
