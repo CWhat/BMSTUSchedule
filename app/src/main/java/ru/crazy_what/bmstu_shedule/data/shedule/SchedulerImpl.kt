@@ -1,6 +1,9 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
+import android.util.Log
 import ru.crazy_what.bmstu_shedule.data.Lesson
+import ru.crazy_what.bmstu_shedule.data.Month
+import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import java.util.*
 
 // TODO мне кажется, это стоит оптимизировать. Как я понял, работа с Calendar не очень быстрая
@@ -11,12 +14,15 @@ class SchedulerImpl(
     private var currentDate = Calendar.getInstance()
 
     private val currentSemester = getSemester(currentDate)
+    private val startSemester = getStartSemester(currentDate, currentSemester)
 
     override val numberOfWeeksInSemester: Int = getNumberOfWeeks(currentSemester)
     override val numberOfStudyDaysInSemester: Int = numberOfWeeksInSemester * 6
 
     override val currentWeek: Int? = getWeek(currentDate)
     override val currentDay: Int? = getCurrentDay(currentDate, currentSemester)
+
+    // TODO научиться определять ближайшую пару
 
     override fun studyDay(studyDayNum: Int): List<Lesson> {
         if (studyDayNum < 1)
@@ -58,8 +64,30 @@ class SchedulerImpl(
         }
     }
 
+    // TODO как-то неправильно работает
     override fun studyWeek(weekNum: Int): List<StudyDayInfo> {
-        TODO("Not yet implemented")
+        val startWeek = (startSemester.clone() as Calendar)
+        Log.d("MyLog", "1. startWeek: ${startWeek.get(Calendar.DAY_OF_MONTH)}")
+        startWeek.add(Calendar.WEEK_OF_YEAR, weekNum - 1)
+        Log.d("MyLog", "2. startWeek: ${startWeek.get(Calendar.DAY_OF_MONTH)}")
+        var startStudyDayNum = ((weekNum - 1) * 6) + 1
+
+        val res = mutableListWithCapacity<StudyDayInfo>(6)
+        for (i in 0..5) {
+            res.add(
+                StudyDayInfo(
+                    startWeek.get(Calendar.YEAR),
+                    Month.from(startWeek),
+                    startWeek.get(Calendar.DAY_OF_MONTH),
+                    startStudyDayNum++
+                )
+            )
+
+            startWeek.add(Calendar.DAY_OF_WEEK, 1)
+            Log.d("MyLog", "3. startWeek: ${startWeek.get(Calendar.DAY_OF_MONTH)}")
+        }
+
+        return res
     }
 
 }

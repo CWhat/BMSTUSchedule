@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.crazy_what.bmstu_shedule.data.shedule.Scheduler
 import ru.crazy_what.bmstu_shedule.ui.components.BottomNavBarPrev
+import ru.crazy_what.bmstu_shedule.ui.components.DateCircleLine
 import ru.crazy_what.bmstu_shedule.ui.components.ScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme

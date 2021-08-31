@@ -45,8 +45,8 @@ fun getWeekOfSchoolYear(date: Calendar): Int {
     }
 }
 
-fun getCurrentDay(currentDate: Calendar, semester: Semester): Int {
-    val startSemester = if (semester == Semester.Spring) {
+fun getStartSemester(currentDate: Calendar, semester: Semester): Calendar =
+    if (semester == Semester.Spring) {
         val february8 = if ((currentDate.get(Calendar.MONTH) > Calendar.FEBRUARY) ||
             (currentDate.get(Calendar.MONTH) == Calendar.FEBRUARY && currentDate.get(Calendar.DAY_OF_MONTH) >= 8)
         )
@@ -63,6 +63,9 @@ fun getCurrentDay(currentDate: Calendar, semester: Semester): Int {
 
         getMonday(september1)
     }
+
+fun getCurrentDay(currentDate: Calendar, semester: Semester): Int {
+    val startSemester = getStartSemester(currentDate, semester)
 
     return getTimeBetween(startSemester, currentDate)
 }

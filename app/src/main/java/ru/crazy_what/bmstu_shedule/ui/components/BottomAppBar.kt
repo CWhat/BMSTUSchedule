@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,9 +51,8 @@ fun BottomNavBarPrev() {
                 //Icons.Filled.Star,
                 Icons.Filled.Search,
                 Icons.Filled.MoreVert
-            ),
-            state = state
-        )
+            )
+        ) {}
     }
 }
 
@@ -94,8 +92,13 @@ fun BasicBottomAppBar(icons: List<ImageVector>) {
 fun BottomNavBar(
     icons: List<ImageVector>,
     iconsDescriptions: List<String?>? = null,
-    state: MutableState<Int>
+    initialPage: Int = 0,
+    onClick: (num: Int) -> Unit
 ) {
+    val state = remember {
+        mutableStateOf(initialPage)
+    }
+
     if (iconsDescriptions != null && icons.size != iconsDescriptions.size)
         error("Размер обоих списков должен быть одинаковый")
 
@@ -109,7 +112,11 @@ fun BottomNavBar(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             for (i in icons.indices) {
-                IconButton(onClick = { if (state.value != i) state.value = i }) {
+                IconButton(onClick = {
+                    if (state.value != i) {
+                        state.value = i; onClick(i)
+                    }
+                }) {
                     SquareIcon(
                         imageVector = icons[i],
                         contentDescription = if (iconsDescriptions != null) iconsDescriptions[i] else "",

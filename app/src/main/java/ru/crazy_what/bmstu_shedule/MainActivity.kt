@@ -1,15 +1,14 @@
 package ru.crazy_what.bmstu_shedule
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.lifecycle.lifecycleScope
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import ru.crazy_what.bmstu_shedule.data.shedule.services.ResponseResult
-import ru.crazy_what.bmstu_shedule.data.shedule.services.SchedulerService
+import ru.crazy_what.bmstu_shedule.ui.screens.CompositionViewModel
 import ru.crazy_what.bmstu_shedule.ui.screens.MainScreen
-import ru.crazy_what.bmstu_shedule.ui.screens.ScheduleViewScreen
 
 class MainActivity : ComponentActivity() {
     @ExperimentalPagerApi
@@ -17,10 +16,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MainScreen()
+            CompositionLocalProvider(CompositionViewModel provides viewModel()) {
+                MainScreen()
+            }
         }
 
-        lifecycleScope.launchWhenResumed {
+        /*lifecycleScope.launchWhenResumed {
             val group = "ФН2-32Б"
             val service = SchedulerService()
             val scheduler = service.schedule(group)
@@ -31,6 +32,6 @@ class MainActivity : ComponentActivity() {
                     ScheduleViewScreen(title = group, scheduler = scheduler.data)
                 }
             }
-        }
+        }*/
     }
 }

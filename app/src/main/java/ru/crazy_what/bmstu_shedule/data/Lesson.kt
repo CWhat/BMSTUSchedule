@@ -7,6 +7,7 @@ data class Lesson(
     val name: String,
     val teacher: String? = null,
     val room: String? = null,
+    // TODO это стоит отсюда убрать
     val timeProgress: Float? = null,
     val messageFromAbove: String? = null,
     val messageBelow: String? = null,

@@ -2,6 +2,7 @@ package ru.crazy_what.bmstu_shedule.data.shedule
 
 import ru.crazy_what.bmstu_shedule.data.Lesson
 
+// TODO сделать тестовую реализацию
 // Тут отсчет идет с единицы, мне показалось это логичным
 interface Scheduler {
 
