@@ -1,12 +1,10 @@
 package ru.crazy_what.bmstu_shedule.ui.screens
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
@@ -25,11 +23,11 @@ import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.MainViewModel
 import ru.crazy_what.bmstu_shedule.ui.HollowStar
 import ru.crazy_what.bmstu_shedule.ui.components.*
+import ru.crazy_what.bmstu_shedule.ui.screens.tabs.MoreStateMachine
 import ru.crazy_what.bmstu_shedule.ui.screens.tabs.SearchStateMachine
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
-import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 
-val CompositionViewModel = compositionLocalOf<MainViewModel> { error("ViewModel не проброшен") }
+val LocalViewModel = compositionLocalOf<MainViewModel> { error("ViewModel не проброшен") }
 
 @ExperimentalPagerApi
 @Preview(showBackground = true, device = Devices.PIXEL, widthDp = 360, heightDp = 640)
@@ -38,7 +36,8 @@ fun MainScreen() {
     val pagerState = rememberPagerState(pageCount = 4, initialOffscreenLimit = 3)
     val coroutineScope = rememberCoroutineScope()
 
-    val searchStateMachine = SearchStateMachine(CompositionViewModel.current)
+    val searchStateMachine = SearchStateMachine(LocalViewModel.current)
+    val moreStateMachine = MoreStateMachine()
 
     BMSTUScheduleTheme(darkTheme = false) {
         // A surface container using the 'background' color from the theme
@@ -76,16 +75,7 @@ fun MainScreen() {
                             searchStateMachine.buildUI()
                         }
                         3 -> {
-                            Column(modifier = Modifier.fillMaxSize()) {
-                                SimpleBasicTopAppBar(title = "Меню")
-
-                                Box(
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(text = "Здесь пока ничего нет", style = titleStyle)
-                                }
-                            }
+                            moreStateMachine.buildUI()
                         }
                     }
                 }

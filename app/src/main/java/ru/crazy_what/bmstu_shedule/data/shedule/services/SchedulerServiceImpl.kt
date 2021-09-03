@@ -47,6 +47,7 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     // TODO выглядит слишком страшно, надо бы отрефакторить
+    // TODO мне кажется, было бы лучше возвращать BiweeklySchedule
     override suspend fun schedule(group: String): ResponseResult<Scheduler> {
         // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
@@ -134,14 +135,17 @@ class SchedulerServiceImpl : SchedulerService {
 
             return@withContext ResponseResult.success(
                 SchedulerImpl(
-                    numerator,
-                    denominator
+                    BiweeklySchedule(
+                        numerator,
+                        denominator
+                    )
                 ) as Scheduler
             )
         }
         return result
     }
 
+    // TODO можно упростить
     private fun tdToLessonInfo(td: Element, time: String): LessonInfo {
         var type: String? = null
         var name = ""

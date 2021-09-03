@@ -88,9 +88,6 @@ fun LessonCard(
             .fillMaxWidth()
             .zIndex(cardZIndex),
         shape = RoundedCornerShape(cardCorner),
-        border = if (lesson.messageFromAbove != null || lesson.messageBelow != null)
-            BorderStroke(2.dp, cardColor)
-        else null,
         elevation = cardElevation
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

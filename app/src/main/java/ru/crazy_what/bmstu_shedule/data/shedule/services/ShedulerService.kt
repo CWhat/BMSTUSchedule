@@ -8,6 +8,7 @@ interface SchedulerService {
     suspend fun groups(): ResponseResult<List<String>>
 
     // Возвращает расписание по имени группы
+    // TODO лучше отдавать BiweeklySchedule
     suspend fun schedule(group: String): ResponseResult<Scheduler>
 
 }

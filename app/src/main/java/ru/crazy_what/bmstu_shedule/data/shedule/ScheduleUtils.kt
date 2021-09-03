@@ -78,13 +78,15 @@ fun getTimeBetween(leftBound: Calendar, rightBound: Calendar): Int {
 }
 
 // Возвращает предыдущий понедельник
+// TODO написать тесты
 fun getMonday(date: Calendar): Calendar {
     val dayOfWeek = Calendar.MONDAY
     val weekday = date.get(Calendar.DAY_OF_WEEK)
 
     // calculate how much to add
     var days = dayOfWeek - weekday
-    if (days < 0) days += 7
+    // Почему-то эта строчка не нужна
+    //if (days < 0) days += 7
 
     val res = date.clone() as Calendar
     res.add(Calendar.DAY_OF_YEAR, days)

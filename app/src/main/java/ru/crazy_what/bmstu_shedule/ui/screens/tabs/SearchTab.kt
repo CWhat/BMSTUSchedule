@@ -9,6 +9,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +46,8 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
         override fun buildUI() {
             Column(modifier = Modifier.fillMaxSize()) {
                 SimpleBasicTopAppBar(title = "Загрузка")
+                LoadView()
+
                 LaunchedEffect("initSearchTab") {
                     viewModel.loadGroups()
                 }
