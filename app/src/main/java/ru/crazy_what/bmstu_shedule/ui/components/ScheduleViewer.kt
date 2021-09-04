@@ -1,9 +1,9 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.data.Date
 import ru.crazy_what.bmstu_shedule.data.DateCircleState
 import ru.crazy_what.bmstu_shedule.data.shedule.Scheduler
-import ru.crazy_what.bmstu_shedule.data.shedule.toTranslateString
+import ru.crazy_what.bmstu_shedule.data.shedule.info
 import ru.crazy_what.bmstu_shedule.data.toShortString
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
@@ -25,7 +25,7 @@ import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 fun ScheduleViewer(scheduler: Scheduler) {
     val coroutineScope = rememberCoroutineScope()
 
-    // TODO убрать "!!"
+    // TODO убрать "!!", сделать проверки
     val currentDay = scheduler.currentDay!!
 
     val scheduleState = rememberPagerState(
@@ -41,46 +41,69 @@ fun ScheduleViewer(scheduler: Scheduler) {
     Column(modifier = Modifier.fillMaxSize()) {
 
         val curVisWeek = scheduler.studyWeekInfo(dateState.currentPage + 1)
-        val curVisDay = scheduler.studyDayInfo(scheduleState.currentPage + 1)
-        Log.d("MyLog", "$curVisDay")
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp),
-            text = "${curVisWeek.number} неделя, ${curVisWeek.type.toTranslateString()}",
-            textAlign = TextAlign.Center,
-            style = littleTitleStyle
-        )
-
-        if (curVisDay.studyDayNum !in curVisWeek.rangeOfDays) {
-            coroutineScope.launch {
-                dateState.animateScrollToPage(scheduler.whichWeekDoesDayBelong(curVisDay) - 1)
+        val curVisDay =
+            remember(scheduleState.currentPage) {
+                val newVal = scheduler.studyDayInfo(scheduleState.currentPage + 1)
+                // При изменении страницы расписания надо делать такую проверку,
+                // чтобы, если что, прокрутить на нужную страницу строку с датами
+                // Хотя логичней было бы использовать currentComposer.changed, но его нельзя
+                // просто так использовать. Возможно, есть какой-то способ
+                if ((newVal.studyDayNum < curVisWeek.rangeOfDays.first) ||
+                    (newVal.studyDayNum >= curVisWeek.rangeOfDays.last)
+                ) {
+                    coroutineScope.launch {
+                        dateState.animateScrollToPage(scheduler.whichWeekDoesDayBelong(newVal) - 1)
+                    }
+                }
+                newVal
             }
-        }
 
-        // TODO добавить HorizontalPager
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            for (i in curVisWeek.rangeOfDays.first until curVisWeek.rangeOfDays.last) {
-                val dayInfo = scheduler.studyDayInfo(i)
-                Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
-                    DateCircle(
-                        Date(
-                            dayOfWeek = dayInfo.dayOfWeek.toShortString(),
-                            day = dayInfo.dayOfMonth,
-                            state = when (dayInfo.studyDayNum) {
-                                curVisDay.studyDayNum -> DateCircleState.SELECT
-                                currentDay -> DateCircleState.CURRENT
-                                else -> DateCircleState.NONE
-                            }
-                        )
-                    )
+        HorizontalPager(modifier = Modifier.fillMaxWidth(), state = dateState) { page ->
+            val week = scheduler.studyWeekInfo(page + 1)
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp),
+                    text = week.info(),
+                    textAlign = TextAlign.Center,
+                    style = littleTitleStyle
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+
+                    for (i in week.rangeOfDays.first until week.rangeOfDays.last) {
+                        val dayInfo = scheduler.studyDayInfo(i)
+
+                        Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                            DateCircle(
+                                Date(
+                                    dayOfWeek = dayInfo.dayOfWeek.toShortString(),
+                                    day = dayInfo.dayOfMonth,
+                                    state = when (dayInfo.studyDayNum) {
+                                        curVisDay.studyDayNum -> DateCircleState.SELECT
+                                        currentDay -> DateCircleState.CURRENT
+                                        else -> DateCircleState.NONE
+                                    }
+                                ),
+                                onClick = {
+                                    coroutineScope.launch {
+                                        scheduleState.animateScrollToPage(dayInfo.studyDayNum - 1)
+                                    }
+                                }
+                            )
+                        }
+                    }
+
                 }
             }
+
         }
 
         HorizontalPager(

@@ -23,13 +23,14 @@ interface Scheduler {
     val currentDay: Int?
 
     fun studyDay(studyDayNum: Int): List<Lesson>
+
     // TODO возможно надо возвращать WeekInfo?
     fun studyWeekInfo(weekNum: Int): WeekInfo
+
     // TODO возможно надо возвращать StudyDayInfo?
     fun studyDayInfo(studyDayNum: Int): StudyDayInfo
     fun whichWeekDoesDayBelong(day: StudyDayInfo): Int
 
-    // TODO удалить
-    fun studyWeek(weekNum: Int): List<StudyDayInfo>
+    // TODO сюда еще можно добавить методы для создания заметок
 
 }

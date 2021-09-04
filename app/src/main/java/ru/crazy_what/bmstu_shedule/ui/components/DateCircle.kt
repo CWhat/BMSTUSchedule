@@ -2,12 +2,15 @@ package ru.crazy_what.bmstu_shedule.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,7 +61,7 @@ private val fakeData = listOf(
 )
 
 @Composable
-fun DateCircle(date: Date) {
+fun DateCircle(date: Date, onClick: () -> Unit = {}) {
     // Определяем цвета
     val (backgroundColor, borderColor, textColor) = when (date.state) {
         DateCircleState.NONE -> Triple(Color.White, Color.Gray, Color.Black)
@@ -70,6 +73,12 @@ fun DateCircle(date: Date) {
         modifier = Modifier
             .border(width = 1.dp, borderColor, shape = CircleShape)
             .background(color = backgroundColor, shape = CircleShape)
+            // Убираем подсветку при удерживании
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
             .layout { measurable, constraints ->
                 // Measure the composable
                 val placeable = measurable.measure(constraints)
