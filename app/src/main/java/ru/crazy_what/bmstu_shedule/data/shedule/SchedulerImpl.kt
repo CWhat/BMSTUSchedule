@@ -21,8 +21,18 @@ class SchedulerImpl(
 
     override val currentWeek: Int? = getWeek(currentDate)
 
-    // TODO кажется, здесь не учитываются выходные
-    override val currentDay: Int? = getTimeBetween(startSemester, currentDate) + 1
+    override val currentDay: Int?
+        get() {
+            if (currentDate.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                return null
+            else {
+                val between = getTimeBetween(startSemester, currentDate)
+                if (between < 0) return null
+
+                val weekNum = between / 7 + 1
+                return (between + 1) - (weekNum - 1)
+            }
+        }
 
     override fun studyDay(studyDayNum: Int): List<Lesson> {
         if (studyDayNum < 1)

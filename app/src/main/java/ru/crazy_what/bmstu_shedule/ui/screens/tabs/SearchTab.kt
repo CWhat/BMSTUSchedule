@@ -9,9 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -98,8 +95,9 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
     ) : SearchState(viewModel) {
 
         private val faculties = groups.map { group ->
-            // TODO получается, что есть кафедра ЮР, так как есть группы ЮР-91, ЮР-111 и ЮР-113, где эта функция отрабатывает неправильно
-            val index = group.indexOfFirst { it.isDigit() }
+            // Есть кафедра ЮР, так как есть, например, группа ЮР-91
+            // это тоже нужно учитывать
+            val index = group.indexOfFirst { it.isDigit() || it == '-' }
             group.substring(0, index)
         }.distinct()
 
@@ -149,7 +147,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
         private val coroutineScope = CoroutineScope(Dispatchers.Main + Job())
 
         private val selectedGroups = groups.filter { group ->
-            group.startsWith(chair)
+            group.startsWith("$chair-")
         }
 
         @Composable

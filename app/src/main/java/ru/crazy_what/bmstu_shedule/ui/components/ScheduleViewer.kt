@@ -22,17 +22,16 @@ import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 fun ScheduleViewer(scheduler: Scheduler) {
     val coroutineScope = rememberCoroutineScope()
 
-    // TODO убрать "!!", сделать проверки
-    val currentDay = scheduler.currentDay!!
+    val currentDay = scheduler.currentDay
 
     val scheduleState = rememberPagerState(
         pageCount = scheduler.numberOfStudyDaysInSemester,
-        initialPage = if (scheduler.currentDay != null) scheduler.currentDay!! - 1 else 0
+        initialPage = if (currentDay != null) currentDay - 1 else 0
     )
 
     val dateState = rememberPagerState(
         pageCount = scheduler.numberOfWeeksInSemester,
-        initialPage = if (scheduler.currentDay != null) scheduler.currentWeek!! - 1 else 0
+        initialPage = if (scheduler.currentWeek != null) scheduler.currentWeek!! - 1 else 0
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
