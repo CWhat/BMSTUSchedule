@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import ru.crazy_what.bmstu_shedule.data.shedule.*
 
@@ -47,8 +48,7 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     // TODO выглядит слишком страшно, надо бы отрефакторить
-    // TODO мне кажется, было бы лучше возвращать BiweeklySchedule
-    override suspend fun schedule(group: String): ResponseResult<Scheduler> {
+    override suspend fun schedule(group: String): ResponseResult<BiweeklySchedule> {
         // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
             if (!groupsMapIsInitialized)
@@ -69,12 +69,12 @@ class SchedulerServiceImpl : SchedulerService {
                 return@withContext ResponseResult.error("Ошибка при парсинге расписания по ссылке $url")
             }
 
-            val numeratorList = mutableListWithCapacity<List<LessonInfo>>(6)
-            val denominatorList = mutableListWithCapacity<List<LessonInfo>>(6)
+            val numeratorList = mutableListWithCapacity<List<Lesson>>(6)
+            val denominatorList = mutableListWithCapacity<List<Lesson>>(6)
 
             for (table in tables) {
-                val dayOfNumerator = mutableListOf<LessonInfo>()
-                val dayOfDenominator = mutableListOf<LessonInfo>()
+                val dayOfNumerator = mutableListOf<Lesson>()
+                val dayOfDenominator = mutableListOf<Lesson>()
 
                 // Получем строки
                 val trs = table.getElementsByTag("tr")
@@ -90,24 +90,22 @@ class SchedulerServiceImpl : SchedulerService {
                         // Возможно, есть расписание и на числитель, и на знаменатель
                         val numeratorPair = tds[1]
                         if (numeratorPair.text().isNotBlank()) {
-                            val lessonInfo = tdToLessonInfo(numeratorPair, time)
-                            dayOfNumerator.add(lessonInfo)
-
+                            val lesson = tdToLesson(numeratorPair, time)
+                            dayOfNumerator.add(lesson)
                         }
                         val denominatorPair = tds[2]
                         if (denominatorPair.text().isNotBlank()) {
-                            val lessonInfo = tdToLessonInfo(denominatorPair, time)
-                            dayOfDenominator.add(lessonInfo)
-
+                            val lesson = tdToLesson(denominatorPair, time)
+                            dayOfDenominator.add(lesson)
                         }
 
                     } else {
                         // расписание и на числитель, и на знаменатель одинаковое
                         val pair = tds[1]
-                        val lessonInfo = tdToLessonInfo(pair, time)
+                        val lesson = tdToLesson(pair, time)
 
-                        dayOfNumerator.add(lessonInfo)
-                        dayOfDenominator.add(lessonInfo)
+                        dayOfNumerator.add(lesson)
+                        dayOfDenominator.add(lesson)
                     }
                 }
 
@@ -134,60 +132,51 @@ class SchedulerServiceImpl : SchedulerService {
             )
 
             return@withContext ResponseResult.success(
-                SchedulerImpl(
-                    BiweeklySchedule(
-                        numerator,
-                        denominator
-                    )
-                ) as Scheduler
+                BiweeklySchedule(
+                    numerator,
+                    denominator
+                )
             )
         }
         return result
     }
 
-    // TODO можно упростить
-    private fun tdToLessonInfo(td: Element, time: String): LessonInfo {
-        var type: String? = null
-        var name = ""
-        var room: String? = null
-        var teacher: String? = null
+    // TODO конвертировать в новый Lesson
+    private fun tdToLesson(td: Element, time: String): Lesson {
+        if (td.childrenSize() != 4)
+            error("Я не понимаю такое расписание")
 
-        for (el in td.children()) {
-            if (el.tagName() == "span") {
-                // название пары заключено в <span>...</span>
-                name = el.text()
-            } else {
-                // всё остальное в <i>...</i>
-                val text = el.text()
+        val (timeStart, timeEnd) = time.split(' ', limit = 2)
 
-                if (text.isBlank())
-                    continue
-
-                if (text.startsWith('(') && text.endsWith(')')) {
-                    // Это тип пары
-                    // Убираем первую и последнюю скобку
-                    type = text.substring(1, text.length - 1)
-                } else if (text[0].isDigit() || text == "Каф") {
-                    // TODO надо еще парсить Измайлово, но как оно выглядит?
-                    // Это аудитория
-                    //if (text != "Каф") {
-                    room = text
-                    //}
-                } else {
-                    // Остается только преподаватель
-                    teacher = text
-                }
-            }
+        var itemText = td.child(0).text()
+        val type = if (itemText.isBlank()) null
+        else if (itemText.startsWith('(') && itemText.endsWith(')')) {
+            // Это тип пары
+            // Убираем первую и последнюю скобку
+            itemText.substring(1, itemText.length - 1)
+        } else {
+            itemText
         }
 
-        val building = getBuildingFromRoom(room)
-        return LessonInfo(
-            typeLesson = getTypeLesson(type),
-            building = building,
+        // Второй элемент - это название предмета
+        itemText = td.child(1).text()
+        val name = itemText
+
+        // Третий элемент - это кабинет
+        itemText = td.child(2).text()
+        val room = if (itemText.isNotBlank()) itemText else null
+
+        // Четвертый - это преподаватель
+        itemText = td.child(3).text()
+        val teacher = if (itemText.isNotBlank()) itemText else null
+
+        return Lesson(
+            timeStart = timeStart,
+            timeEnd = timeEnd,
+            type = type,
             name = name,
             teacher = teacher,
             room = room,
-            numPair = CallManager.getNumPair(building, time)
         )
     }
 }

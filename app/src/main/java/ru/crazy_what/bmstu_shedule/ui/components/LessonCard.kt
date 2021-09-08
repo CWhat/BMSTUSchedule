@@ -1,9 +1,8 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -21,32 +20,40 @@ import ru.crazy_what.bmstu_shedule.ui.cardCorner
 import ru.crazy_what.bmstu_shedule.ui.cardElevation
 import ru.crazy_what.bmstu_shedule.ui.cardZIndex
 import ru.crazy_what.bmstu_shedule.ui.sidePaddingOfCard
-import ru.crazy_what.bmstu_shedule.ui.theme.*
+import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
+import ru.crazy_what.bmstu_shedule.ui.theme.infoStyle
+import ru.crazy_what.bmstu_shedule.ui.theme.teacherStyle
+import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 
-@Preview(showBackground = true, device = Devices.PIXEL_4)
+@Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
-fun LessonCard1Prev() {
+fun LessonCardPrev() {
     BMSTUScheduleTheme {
-        LessonCard(
-            fakeData[0]
-        )
-    }
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-fun LessonCard2Prev() {
-    BMSTUScheduleTheme {
-        LessonCard(
-            fakeData[1]
-        )
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                LessonCard(fakeData[0], messageFromAbove = "через 10ч 23мин")
+            }
+            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                LessonCard(fakeData[1])
+            }
+            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                LessonCard(fakeData[2], timeProgress = 0.21F, messageBelow = "осталось 1ч 15мин")
+            }
+        }
     }
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun LessonsListPrev() {
-    LessonsList(lessons = fakeData)
+    BMSTUScheduleTheme {
+        LessonsList(
+            lessons = fakeData,
+            messageFromAbove = Pair(0, "через 10ч 23мин"),
+            messageBelow = Pair(2, "осталось 1ч 15мин"),
+            progress = Pair(2, 0.21F),
+        )
+    }
 }
 
 private val fakeData = listOf(
@@ -57,7 +64,6 @@ private val fakeData = listOf(
         name = "Кратные интегралы и ряды",
         teacher = "Марчевский И.К.",
         room = "212л",
-        messageFromAbove = "через 10ч 23мин",
     ),
     Lesson(
         type = "лек",
@@ -73,15 +79,16 @@ private val fakeData = listOf(
         name = "Кратные интегралы и ряды",
         teacher = "Марчевский И.К.",
         room = "212л",
-        timeProgress = 0.21F,
-        messageBelow = "осталось 1ч 15мин",
     )
 )
 
 
 @Composable
 fun LessonCard(
-    lesson: Lesson
+    lesson: Lesson,
+    timeProgress: Float? = null,
+    messageFromAbove: String? = null,
+    messageBelow: String? = null,
 ) {
     Card(
         modifier = Modifier
@@ -91,10 +98,10 @@ fun LessonCard(
         elevation = cardElevation
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            if (lesson.messageFromAbove != null) {
-                Surface(modifier = Modifier.fillMaxWidth(), color = cardColor) {
+            if (messageFromAbove != null) {
+                Surface(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colors.primary) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text(text = lesson.messageFromAbove, style = infoStyle)
+                        Text(text = messageFromAbove, style = infoStyle)
                     }
                 }
             }
@@ -107,12 +114,12 @@ fun LessonCard(
                 Text(
                     text = "${lesson.timeStart}-${lesson.timeEnd}" +
                             (if (lesson.room != null) ", каб.: ${lesson.room}" else "") +
-                            if (lesson.type.isNotEmpty()) ", ${lesson.type}" else "",
+                            if (!lesson.type.isNullOrEmpty()) ", ${lesson.type}" else "",
                     style = infoStyle
                 )
             }
 
-            if (lesson.timeProgress == null) {
+            if (timeProgress == null) {
                 Divider(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -122,10 +129,13 @@ fun LessonCard(
                 )
             } else {
                 LinearProgressIndicator(
-                    progress = lesson.timeProgress, modifier = Modifier
+                    progress = timeProgress,
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp, 4.dp)
-                        .height(2.dp), color = cardColor, backgroundColor = Color.Green
+                        .height(2.dp),
+                    color = MaterialTheme.colors.primary,
+                    backgroundColor = Color.Green
                 )
             }
 
@@ -162,10 +172,10 @@ fun LessonCard(
                 }
             }
 
-            if (lesson.messageBelow != null) {
-                Surface(modifier = Modifier.fillMaxWidth(), color = cardColor) {
+            if (messageBelow != null) {
+                Surface(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colors.primary) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text(text = lesson.messageBelow, style = infoStyle)
+                        Text(text = messageBelow, style = infoStyle)
                     }
                 }
             }
@@ -173,12 +183,25 @@ fun LessonCard(
     }
 }
 
+// TODO переработать
+// У messageBelow и messageFromAbove первый параметр - это индекс элемента, второй - текст сообщения
+// У progress первый параметр - это индекс элемента, второй - значения прогрессбара
 @Composable
-fun LessonsList(lessons: List<Lesson>) {
+fun LessonsList(
+    lessons: List<Lesson>,
+    messageBelow: Pair<Int, String>? = null,
+    messageFromAbove: Pair<Int, String>? = null,
+    progress: Pair<Int, Float>? = null
+) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(lessons) { lesson ->
+        itemsIndexed(lessons) { index, lesson ->
             Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                LessonCard(lesson)
+                LessonCard(
+                    lesson,
+                    timeProgress = if (progress != null && index == progress.first) progress.second else null,
+                    messageFromAbove = if (messageFromAbove != null && index == messageFromAbove.first) messageFromAbove.second else null,
+                    messageBelow = if (messageBelow != null && index == messageBelow.first) messageBelow.second else null,
+                )
             }
         }
     }

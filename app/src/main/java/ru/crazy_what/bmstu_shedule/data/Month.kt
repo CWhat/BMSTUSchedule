@@ -35,22 +35,22 @@ enum class Month {
         }
     }
 
-}
+    // Подобный трюк нужен для того, чтобы при конвертировании в строку, можно было взять перевод
+    @Composable
+    fun toLangString(): String = when (this) {
+        // тут можно так stringResource(id = )
+        JANUARY -> "Январь"
+        FEBRUARY -> "Февраль"
+        MARCH -> "Март"
+        APRIL -> "Апрель"
+        MAY -> "Май"
+        JUNE -> "Июнь"
+        JULY -> "Июль"
+        AUGUST -> "Август"
+        SEPTEMBER -> "Сентябрь"
+        OCTOBER -> "Октябрь"
+        NOVEMBER -> "Ноябрь"
+        DECEMBER -> "Декабрь"
+    }
 
-// Подобный трюк нужен для того, чтобы при конвертировании в строку, можно было взять перевод
-@Composable
-fun Month.toLangString(): String = when (this) {
-    // тут можно так stringResource(id = )
-    Month.JANUARY -> "Январь"
-    Month.FEBRUARY -> "Февраль"
-    Month.MARCH -> "Март"
-    Month.APRIL -> "Апрель"
-    Month.MAY -> "Май"
-    Month.JUNE -> "Июнь"
-    Month.JULY -> "Июль"
-    Month.AUGUST -> "Август"
-    Month.SEPTEMBER -> "Сентябрь"
-    Month.OCTOBER -> "Октябрь"
-    Month.NOVEMBER -> "Ноябрь"
-    Month.DECEMBER -> "Декабрь"
 }

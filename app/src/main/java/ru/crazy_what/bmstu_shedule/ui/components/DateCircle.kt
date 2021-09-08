@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -20,53 +21,80 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.crazy_what.bmstu_shedule.data.Date
-import ru.crazy_what.bmstu_shedule.data.DateCircleState
+import ru.crazy_what.bmstu_shedule.data.DayOfWeek
+import ru.crazy_what.bmstu_shedule.data.Month
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
-import ru.crazy_what.bmstu_shedule.ui.theme.cardColor
 import ru.crazy_what.bmstu_shedule.ui.theme.dateCircleStyle
-import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 import kotlin.math.max
-
-@Preview(showBackground = true, device = Devices.PIXEL_4, widthDp = 232)
-@Composable
-fun DateCirclePrev() {
-    BMSTUScheduleTheme {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            DateCircle(fakeData[2])
-            DateCircle(fakeData[3])
-            DateCircle(fakeData[4])
-        }
-    }
-}
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun DateCircleLinePrev() {
     BMSTUScheduleTheme {
-        DateCircleLine(title = "1 неделя, числитель", list = fakeData)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            fakeData.forEach { date ->
+                Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                    DateCircle(date = date.first, state = date.second)
+                }
+            }
+        }
     }
 }
 
 private val fakeData = listOf(
-    Date(dayOfWeek = "ПН", day = 30, state = DateCircleState.NONE),
-    Date(dayOfWeek = "ВТ", day = 31, state = DateCircleState.NONE),
-    Date(dayOfWeek = "СР", day = 1, state = DateCircleState.CURRENT),
-    Date(dayOfWeek = "ЧТ", day = 2, state = DateCircleState.NONE),
-    Date(dayOfWeek = "ПТ", day = 3, state = DateCircleState.SELECT),
-    Date(dayOfWeek = "СБ", day = 4, state = DateCircleState.NONE)
+    Pair(
+        Date(year = 2021, month = Month.AUGUST, dayOfWeek = DayOfWeek.MONDAY, dayOfMonth = 30),
+        DateCircleState.NONE
+    ),
+    Pair(
+        Date(year = 2021, month = Month.AUGUST, dayOfWeek = DayOfWeek.TUESDAY, dayOfMonth = 31),
+        DateCircleState.NONE
+    ),
+    Pair(
+        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.WEDNESDAY, dayOfMonth = 1),
+        DateCircleState.CURRENT
+    ),
+    Pair(
+        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.THURSDAY, dayOfMonth = 2),
+        DateCircleState.NONE
+    ),
+    Pair(
+        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.FRIDAY, dayOfMonth = 3),
+        DateCircleState.SELECT
+    ),
+    Pair(
+        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.SATURDAY, dayOfMonth = 4),
+        DateCircleState.NONE
+    )
 )
 
+enum class DateCircleState {
+    SELECT, CURRENT, NONE
+}
+
 @Composable
-fun DateCircle(date: Date, onClick: () -> Unit = {}) {
+fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
     // Определяем цвета
-    val (backgroundColor, borderColor, textColor) = when (date.state) {
-        DateCircleState.NONE -> Triple(Color.White, Color.Gray, Color.Black)
-        DateCircleState.CURRENT -> Triple(Color.White, cardColor, cardColor)
-        DateCircleState.SELECT -> Triple(cardColor, cardColor, Color.White)
+    val (backgroundColor, borderColor, textColor) = when (state) {
+        DateCircleState.NONE -> Triple(
+            MaterialTheme.colors.surface,
+            Color.Gray,
+            MaterialTheme.colors.onSurface
+        )
+        DateCircleState.CURRENT -> Triple(
+            MaterialTheme.colors.surface,
+            MaterialTheme.colors.primary,
+            MaterialTheme.colors.primary
+        )
+        DateCircleState.SELECT -> Triple(
+            MaterialTheme.colors.primary,
+            MaterialTheme.colors.primary,
+            MaterialTheme.colors.surface
+        )
     }
 
     Box(
@@ -107,37 +135,16 @@ fun DateCircle(date: Date, onClick: () -> Unit = {}) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CompositionLocalProvider(LocalContentColor provides textColor) {
-                Text(text = date.dayOfWeek, textAlign = TextAlign.Center, style = dateCircleStyle)
                 Text(
-                    text = date.day.toString(),
+                    text = date.dayOfWeek.toShortString(),
                     textAlign = TextAlign.Center,
                     style = dateCircleStyle
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun DateCircleLine(title: String, list: List<Date>) {
-    Column {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp),
-            text = title,
-            textAlign = TextAlign.Center,
-            style = littleTitleStyle
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            list.forEach { date ->
-                Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
-                    DateCircle(date = date)
-                }
+                Text(
+                    text = date.dayOfMonth.toString(),
+                    textAlign = TextAlign.Center,
+                    style = dateCircleStyle
+                )
             }
         }
     }

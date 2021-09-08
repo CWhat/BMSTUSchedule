@@ -13,13 +13,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import ru.crazy_what.bmstu_shedule.data.Date
-import ru.crazy_what.bmstu_shedule.data.DateCircleState
 import ru.crazy_what.bmstu_shedule.data.shedule.Scheduler
-import ru.crazy_what.bmstu_shedule.data.shedule.info
-import ru.crazy_what.bmstu_shedule.data.toShortString
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
+// TODO мне кажется, это можно сделать более опрятно
 @ExperimentalPagerApi
 @Composable
 fun ScheduleViewer(scheduler: Scheduler) {
@@ -40,6 +37,7 @@ fun ScheduleViewer(scheduler: Scheduler) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
+        // текущая отображаемая неделя
         val curVisWeek = scheduler.studyWeekInfo(dateState.currentPage + 1)
         val curVisDay =
             remember(scheduleState.currentPage) {
@@ -83,15 +81,12 @@ fun ScheduleViewer(scheduler: Scheduler) {
 
                         Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
                             DateCircle(
-                                Date(
-                                    dayOfWeek = dayInfo.dayOfWeek.toShortString(),
-                                    day = dayInfo.dayOfMonth,
-                                    state = when (dayInfo.studyDayNum) {
-                                        curVisDay.studyDayNum -> DateCircleState.SELECT
-                                        currentDay -> DateCircleState.CURRENT
-                                        else -> DateCircleState.NONE
-                                    }
-                                ),
+                                dayInfo.date,
+                                state = when (dayInfo.studyDayNum) {
+                                    curVisDay.studyDayNum -> DateCircleState.SELECT
+                                    currentDay -> DateCircleState.CURRENT
+                                    else -> DateCircleState.NONE
+                                },
                                 onClick = {
                                     coroutineScope.launch {
                                         scheduleState.animateScrollToPage(dayInfo.studyDayNum - 1)

@@ -1,6 +1,5 @@
 package ru.crazy_what.bmstu_shedule.ui.components
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,9 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,6 +63,7 @@ private val fakeData =
     listOf("АК", "БМТ", "ИБМ", "ИУ", "Л", "ЛТ", "МТ", "РЛ", "РКТ", "РЛ", "ФН", "Э", "ЮР")
 
 // TODO добавить эффект затемнения принажатии
+// TODO можно добавить placeholder, который будет показываться, если список пустой
 @Composable
 fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {

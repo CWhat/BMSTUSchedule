@@ -3,11 +3,11 @@ package ru.crazy_what.bmstu_shedule.data.shedule
 import androidx.compose.runtime.Composable
 
 enum class WeekType {
-    NUMERATOR, DENOMINATOR
-}
+    NUMERATOR, DENOMINATOR;
 
-@Composable
-fun WeekType.toTranslateString(): String = when(this) {
-    WeekType.NUMERATOR -> "числитель"
-    WeekType.DENOMINATOR -> "знаменатель"
+    @Composable
+    fun toTranslateString(): String = when(this) {
+        NUMERATOR -> "числитель"
+        DENOMINATOR -> "знаменатель"
+    }
 }

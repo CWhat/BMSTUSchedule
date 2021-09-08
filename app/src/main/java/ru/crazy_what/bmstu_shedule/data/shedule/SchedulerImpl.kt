@@ -1,11 +1,13 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
+import ru.crazy_what.bmstu_shedule.data.Date
 import ru.crazy_what.bmstu_shedule.data.DayOfWeek
 import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.data.Month
 import java.util.*
 
 // TODO мне кажется, это стоит оптимизировать. Как я понял, работа с Calendar не очень быстрая
+// TODO начало семестра и количество дней и недель лучше передавать в конструктор
 class SchedulerImpl(
     private val biweeklySchedule: BiweeklySchedule
 ) : Scheduler {
@@ -19,6 +21,7 @@ class SchedulerImpl(
 
     override val currentWeek: Int? = getWeek(currentDate)
 
+    // TODO кажется, здесь не учитываются выходные
     override val currentDay: Int? = getTimeBetween(startSemester, currentDate) + 1
 
     override fun studyDay(studyDayNum: Int): List<Lesson> {
@@ -34,7 +37,7 @@ class SchedulerImpl(
         else
             biweeklySchedule.denominator
 
-        val lessonInfoList = when ((studyDayNum - 1) % 6) {
+        val lessonList = when ((studyDayNum - 1) % 6) {
             0 -> week.monday
             1 -> week.tuesday
             2 -> week.wednesday
@@ -44,21 +47,7 @@ class SchedulerImpl(
             else -> error("Как такое возможно?")
         }
 
-        return lessonInfoList.map { lessonInfo ->
-            val time = CallManager.getTime(lessonInfo.building, lessonInfo.numPair)
-
-            Lesson(
-                type = lessonInfo.typeLesson.toString(),
-                timeStart = time.first,
-                timeEnd = time.second,
-                name = lessonInfo.name,
-                teacher = lessonInfo.teacher,
-                room = lessonInfo.room,
-                timeProgress = null, // TODO реализовать сообщение
-                messageFromAbove = null,
-                messageBelow = null
-            )
-        }
+        return lessonList
     }
 
     // TODO сделать проверку на границы
@@ -75,14 +64,17 @@ class SchedulerImpl(
         // день относительно начала семестра, но по обычному календарю
         val dayNum = (studyWeekNum - 1) + studyDayNum
 
-        val date = startSemester.clone() as Calendar
-        date.add(Calendar.DAY_OF_YEAR, dayNum - 1)
+        val calendarDate = startSemester.clone() as Calendar
+        calendarDate.add(Calendar.DAY_OF_YEAR, dayNum - 1)
+
+        val date = Date(
+            year = calendarDate.get(Calendar.YEAR),
+            month = Month.from(calendarDate),
+            dayOfWeek = DayOfWeek.from(calendarDate),
+            dayOfMonth = calendarDate.get(Calendar.DAY_OF_MONTH),
+        )
         return StudyDayInfo(
-            year = date.get(Calendar.YEAR),
-            month = Month.from(date),
-            dayOfWeek = DayOfWeek.from(date),
-            dayOfMonth = date.get(Calendar.DAY_OF_MONTH),
-            studyDayNum = studyDayNum
+            date, studyDayNum
         )
     }
 

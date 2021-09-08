@@ -24,17 +24,18 @@ enum class DayOfWeek {
             else -> error("Некорректный месяц")
         }
     }
-}
 
-// Подобный трюк нужен для того, чтобы при конвертировании в строку, можно было взять перевод
-@Composable
-fun DayOfWeek.toShortString(): String = when (this) {
-    // тут можно так stringResource(id = )
-    DayOfWeek.MONDAY -> "ПН"
-    DayOfWeek.TUESDAY -> "ВТ"
-    DayOfWeek.WEDNESDAY -> "СР"
-    DayOfWeek.THURSDAY -> "ЧТ"
-    DayOfWeek.FRIDAY -> "ПТ"
-    DayOfWeek.SATURDAY -> "СБ"
-    DayOfWeek.SUNDAY -> "ВС"
+    // Подобный трюк нужен для того, чтобы при конвертировании в строку, можно было взять перевод
+    @Composable
+    fun toShortString(): String = when (this) {
+        // тут можно так stringResource(id = )
+        MONDAY -> "ПН"
+        TUESDAY -> "ВТ"
+        WEDNESDAY -> "СР"
+        THURSDAY -> "ЧТ"
+        FRIDAY -> "ПТ"
+        SATURDAY -> "СБ"
+        SUNDAY -> "ВС"
+    }
+
 }

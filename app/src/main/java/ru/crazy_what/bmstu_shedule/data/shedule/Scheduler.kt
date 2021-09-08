@@ -3,7 +3,8 @@ package ru.crazy_what.bmstu_shedule.data.shedule
 import ru.crazy_what.bmstu_shedule.data.Lesson
 
 // TODO сделать тестовую реализацию
-// TODO как сделать редактор расписания
+// TODO как сделать редактор расписания?
+// Интерфейс для виджета с расписанием
 // Тут отсчет идет с единицы, мне показалось это логичным
 interface Scheduler {
 
@@ -16,7 +17,7 @@ interface Scheduler {
     val numberOfStudyDaysInSemester: Int
     val numberOfWeeksInSemester: Int
 
-    // null, если сейчас другой семестр
+    // null, если сейчас другой семестр или текущий день - это выходной
     // возвращаются именно номера относительно первой недели или первого дня этого семестра
     //val currentWeek: WeekInfo?
     val currentWeek: Int?
