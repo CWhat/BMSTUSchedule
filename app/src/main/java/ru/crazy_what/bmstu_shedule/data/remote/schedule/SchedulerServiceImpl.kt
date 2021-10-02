@@ -1,9 +1,10 @@
-package ru.crazy_what.bmstu_shedule.data.shedule.services
+package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import ru.crazy_what.bmstu_shedule.data.shedule.*
@@ -16,7 +17,7 @@ class SchedulerServiceImpl : SchedulerService {
     private suspend fun initGroupsMap() {
         val map =
             withContext(Dispatchers.IO) {
-                val url = "https://lks.bmstu.ru/schedule/list"
+                val url = Constants.BASE_URL + "/schedule/list"
 
                 val document = Jsoup.connect(url).get()
                 //val groupsElements = document.select(".text-nowrap") // все кнопки
@@ -25,7 +26,7 @@ class SchedulerServiceImpl : SchedulerService {
                 val groupsMap = mutableMapOf<String, String>()
 
                 for (el in groupsElements)
-                    groupsMap[el.text()] = "https://lks.bmstu.ru${el.attr("href")}"
+                    groupsMap[el.text()] = Constants.BASE_URL + el.attr("href")
 
                 return@withContext groupsMap
             }

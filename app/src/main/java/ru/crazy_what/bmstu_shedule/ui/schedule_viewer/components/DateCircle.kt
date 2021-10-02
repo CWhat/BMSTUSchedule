@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.components
+package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,9 +20,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.crazy_what.bmstu_shedule.data.Date
-import ru.crazy_what.bmstu_shedule.data.DayOfWeek
-import ru.crazy_what.bmstu_shedule.data.Month
+import ru.crazy_what.bmstu_shedule.date.Date
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
+import ru.crazy_what.bmstu_shedule.date.Month
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 import ru.crazy_what.bmstu_shedule.ui.theme.dateCircleStyle
 import kotlin.math.max
@@ -30,7 +30,7 @@ import kotlin.math.max
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 fun DateCircleLinePrev() {
-    BMSTUScheduleTheme {
+    BMSTUScheduleTheme(darkTheme = false) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -81,9 +81,9 @@ fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
     // Определяем цвета
     val (backgroundColor, borderColor, textColor) = when (state) {
         DateCircleState.NONE -> Triple(
-            MaterialTheme.colors.surface,
-            Color.Gray,
-            MaterialTheme.colors.onSurface
+            MaterialTheme.colors.surface, // цвет фона
+            Color.Gray, // цвет ободка
+            MaterialTheme.colors.onSurface // цвет текста
         )
         DateCircleState.CURRENT -> Triple(
             MaterialTheme.colors.surface,

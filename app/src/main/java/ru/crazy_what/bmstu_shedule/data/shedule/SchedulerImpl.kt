@@ -1,9 +1,10 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
-import ru.crazy_what.bmstu_shedule.data.Date
-import ru.crazy_what.bmstu_shedule.data.DayOfWeek
+import ru.crazy_what.bmstu_shedule.date.Date
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.data.Lesson
-import ru.crazy_what.bmstu_shedule.data.Month
+import ru.crazy_what.bmstu_shedule.date.Month
+import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import java.util.*
 
 // TODO мне кажется, это стоит оптимизировать. Как я понял, работа с Calendar не очень быстрая

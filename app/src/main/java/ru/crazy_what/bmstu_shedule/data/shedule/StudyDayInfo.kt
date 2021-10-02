@@ -1,6 +1,6 @@
 package ru.crazy_what.bmstu_shedule.data.shedule
 
-import ru.crazy_what.bmstu_shedule.data.Date
+import ru.crazy_what.bmstu_shedule.date.Date
 
 // TODO возможно, стоит добавить поле, обозначающее является ли день выходным
 data class StudyDayInfo(

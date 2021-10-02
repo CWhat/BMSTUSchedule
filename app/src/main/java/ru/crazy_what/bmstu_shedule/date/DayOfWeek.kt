@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.data
+package ru.crazy_what.bmstu_shedule.date
 
 import androidx.compose.runtime.Composable
 import java.util.*

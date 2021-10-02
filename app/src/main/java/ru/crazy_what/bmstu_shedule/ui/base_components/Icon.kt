@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.components
+package ru.crazy_what.bmstu_shedule.ui.base_components
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import ru.crazy_what.bmstu_shedule.ui.iconSize
 
 @Composable

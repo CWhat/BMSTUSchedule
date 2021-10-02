@@ -7,7 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.crazy_what.bmstu_shedule.ui.components.SimpleBasicTopAppBar
+import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 
 sealed class MoreState {

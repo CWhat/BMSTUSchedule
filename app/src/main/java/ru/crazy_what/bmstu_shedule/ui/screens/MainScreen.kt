@@ -22,9 +22,11 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.MainViewModel
 import ru.crazy_what.bmstu_shedule.ui.HollowStar
-import ru.crazy_what.bmstu_shedule.ui.components.*
-import ru.crazy_what.bmstu_shedule.ui.screens.tabs.MoreStateMachine
+import ru.crazy_what.bmstu_shedule.ui.base_components.*
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components.DateCircleLinePrev
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components.LessonsListPrev
 import ru.crazy_what.bmstu_shedule.ui.screens.tabs.SearchStateMachine
+import ru.crazy_what.bmstu_shedule.ui.screens.tabs.more.MoreTab
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
 val LocalViewModel = compositionLocalOf<MainViewModel> { error("ViewModel не проброшен") }
@@ -37,7 +39,7 @@ fun MainScreen() {
     val coroutineScope = rememberCoroutineScope()
 
     val searchStateMachine = SearchStateMachine(LocalViewModel.current)
-    val moreStateMachine = MoreStateMachine()
+    //val moreStateMachine = MoreStateMachine()
 
     BMSTUScheduleTheme(darkTheme = false) {
         // A surface container using the 'background' color from the theme
@@ -67,7 +69,7 @@ fun MainScreen() {
                         }
                         1 -> {
                             Column(modifier = Modifier.fillMaxSize()) {
-                                SimpleBasicTopAppBar(title = "Избранное")
+                                SimpleBasicTopAppBar(title = "Закладки")
                                 LoadView()
                             }
                         }
@@ -75,7 +77,8 @@ fun MainScreen() {
                             searchStateMachine.buildUI()
                         }
                         3 -> {
-                            moreStateMachine.buildUI()
+                            //moreStateMachine.buildUI()
+                            MoreTab()
                         }
                     }
                 }

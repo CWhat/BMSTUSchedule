@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.data.shedule.services
+package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
 sealed class ResponseResult<T> {
     data class Success<T>(val data: T): ResponseResult<T>()

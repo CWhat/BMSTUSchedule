@@ -16,9 +16,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.*
-import ru.crazy_what.bmstu_shedule.data.shedule.Scheduler
-import ru.crazy_what.bmstu_shedule.data.shedule.services.ResponseResult
-import ru.crazy_what.bmstu_shedule.ui.components.*
+import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
+import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
+import ru.crazy_what.bmstu_shedule.ui.base_components.*
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components.ScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 
 interface SearchViewModel {

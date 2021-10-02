@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.components
+package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -13,7 +13,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import ru.crazy_what.bmstu_shedule.data.shedule.Scheduler
+import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
 // TODO мне кажется, это можно сделать более опрятно

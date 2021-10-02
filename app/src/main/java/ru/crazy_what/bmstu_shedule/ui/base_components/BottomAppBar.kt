@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.components
+package ru.crazy_what.bmstu_shedule.ui.base_components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

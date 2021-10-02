@@ -1,6 +1,8 @@
-package ru.crazy_what.bmstu_shedule.data.shedule
+package ru.crazy_what.bmstu_shedule.domain.repository
 
 import ru.crazy_what.bmstu_shedule.data.Lesson
+import ru.crazy_what.bmstu_shedule.data.shedule.StudyDayInfo
+import ru.crazy_what.bmstu_shedule.data.shedule.WeekInfo
 
 // TODO сделать тестовую реализацию
 // TODO как сделать редактор расписания?

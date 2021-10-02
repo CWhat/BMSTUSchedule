@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.components
+package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,7 +46,7 @@ fun LessonCardPrev() {
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun LessonsListPrev() {
-    BMSTUScheduleTheme {
+    BMSTUScheduleTheme(darkTheme = false) {
         LessonsList(
             lessons = fakeData,
             messageFromAbove = Pair(0, "через 10ч 23мин"),

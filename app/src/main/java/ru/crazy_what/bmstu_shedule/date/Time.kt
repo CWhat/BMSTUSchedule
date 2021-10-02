@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.data
+package ru.crazy_what.bmstu_shedule.date
 
 import androidx.annotation.IntRange
 
@@ -9,4 +9,9 @@ data class Time(
 
     override fun toString(): String =
         "${if (hours < 10) "0" else ""}$hours:${if (minutes < 10) "0" else ""}$minutes"
+
+//    operator fun minus(right: Time): Time {
+//        val mins = this.minutes - right.minutes
+//        // TODO
+//    }
 }

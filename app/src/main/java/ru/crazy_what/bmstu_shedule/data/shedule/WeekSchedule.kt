@@ -2,6 +2,7 @@ package ru.crazy_what.bmstu_shedule.data.shedule
 
 import ru.crazy_what.bmstu_shedule.data.Lesson
 
+// TODO можно заменить на отображение "день недели -> список занятий"
 // Расписание на неделю
 data class WeekSchedule(
     val monday: List<Lesson>,
