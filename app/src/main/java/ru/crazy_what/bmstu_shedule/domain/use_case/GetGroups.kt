@@ -5,9 +5,10 @@ import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerService
+import javax.inject.Inject
 
 // TODO добавить dependency injection
-class GetGroups(private val service: SchedulerService = SchedulerService()) {
+class GetGroups @Inject constructor(private val service: SchedulerService) {
 
     operator fun invoke(): Flow<Resource<List<String>>> = flow {
         emit(Resource.Loading())

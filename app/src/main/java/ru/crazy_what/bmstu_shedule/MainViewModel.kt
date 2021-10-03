@@ -7,8 +7,10 @@ import ru.crazy_what.bmstu_shedule.data.schedule.SchedulerImpl
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerService
 
+// TODO убрать это
 class MainViewModel : ViewModel() {
 
+    // TODO добавлять из графа зависимостей
     private val schedulerService = SchedulerService()
 
 //    val groupsFlow =

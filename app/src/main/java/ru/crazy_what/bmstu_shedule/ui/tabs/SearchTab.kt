@@ -112,7 +112,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
                 SearchTopAppBar(onValueChange = {})
                 SimpleList(
                     items = faculties,
-                    onClick = { _, faculty -> viewModel.showChairs(groups, faculty) })
+                    onClickItem = { _, faculty -> viewModel.showChairs(groups, faculty) })
             }
         }
 
@@ -137,7 +137,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
                 SearchTopAppBar(onValueChange = {})
                 SimpleList(
                     items = chairs,
-                    onClick = { _, chair -> viewModel.showGroups(groups, chair) })
+                    onClickItem = { _, chair -> viewModel.showGroups(groups, chair) })
             }
         }
 
@@ -159,7 +159,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
         override fun buildUI() {
             Column(modifier = Modifier.fillMaxSize()) {
                 SearchTopAppBar(onValueChange = {})
-                SimpleList(items = selectedGroups, onClick = { _, selectedGroup ->
+                SimpleList(items = selectedGroups, onClickItem = { _, selectedGroup ->
                     coroutineScope.launch {
                         viewModel.loadScheduler(selectedGroup)
                     }

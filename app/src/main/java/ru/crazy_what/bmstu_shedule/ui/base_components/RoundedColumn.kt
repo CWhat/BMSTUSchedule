@@ -1,12 +1,12 @@
 package ru.crazy_what.bmstu_shedule.ui.base_components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
@@ -29,7 +29,7 @@ import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 @Composable
 fun RoundedColumnPrev() {
     BMSTUScheduleTheme {
-        RoundedColumn(count = 5) { num ->
+        RoundedColumn(count = 5, {}) { num ->
             Text(
                 modifier = Modifier.padding(16.dp, 4.dp),
                 text = "Item ${num + 1}",
@@ -45,7 +45,7 @@ fun SimpleListPrev1() {
     BMSTUScheduleTheme {
         SimpleList(
             items = listOf(fakeData[0]),
-            onClick = { _, _ -> })
+            onClickItem = { _, _ -> })
     }
 }
 
@@ -55,17 +55,26 @@ fun SimpleListPrev2() {
     BMSTUScheduleTheme {
         SimpleList(
             items = fakeData,
-            onClick = { _, _ -> })
+            onClickItem = { _, _ -> })
     }
 }
 
 private val fakeData =
     listOf("АК", "БМТ", "ИБМ", "ИУ", "Л", "ЛТ", "МТ", "РЛ", "РКТ", "РЛ", "ФН", "Э", "ЮР")
 
-// TODO добавить эффект затемнения принажатии
-// TODO можно добавить placeholder, который будет показываться, если список пустой
+// TODO добавить Modifier в параметры функции
 @Composable
-fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
+fun RoundedColumn(
+    count: Int,
+    onClickItem: (num: Int) -> Unit,
+    placeholder: @Composable () -> Unit = {},
+    item: @Composable (Int) -> Unit,
+) {
+    if (count == 0) {
+        placeholder()
+        return
+    }
+
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         items(count) { num ->
             val shape = when {
@@ -81,7 +90,10 @@ fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = sidePaddingOfCard, vertical = 1.dp)
-                    .zIndex(cardZIndex),
+                    .zIndex(cardZIndex)
+                    .clickable {
+                        onClickItem(num)
+                    },
                 shape = shape,
                 elevation = cardElevation,
                 backgroundColor = Color.White
@@ -92,9 +104,12 @@ fun RoundedColumn(count: Int, item: @Composable (Int) -> Unit) {
     }
 }
 
+// TODO добавить Modifier в параметры функции
 @Composable
-fun SimpleList(items: List<String>, onClick: (num: Int, item: String) -> Unit) {
-    RoundedColumn(count = items.size) { num ->
+fun SimpleList(items: List<String>, onClickItem: (num: Int, item: String) -> Unit) {
+    RoundedColumn(
+        count = items.size,
+        onClickItem = { num -> onClickItem(num, items[num]) }) { num ->
         Box(modifier = Modifier.padding(16.dp, 8.dp)) {
             Text(
                 modifier = Modifier.align(Alignment.CenterStart),
@@ -102,11 +117,11 @@ fun SimpleList(items: List<String>, onClick: (num: Int, item: String) -> Unit) {
                 style = titleStyle
             )
 
-            IconButton(
+            SquareIcon(
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = "forward",
                 modifier = Modifier.align(Alignment.CenterEnd),
-                onClick = { onClick(num, items[num]) }) {
-                SquareIcon(imageVector = Icons.Filled.ArrowForward, contentDescription = "forward")
-            }
+            )
         }
     }
 }
