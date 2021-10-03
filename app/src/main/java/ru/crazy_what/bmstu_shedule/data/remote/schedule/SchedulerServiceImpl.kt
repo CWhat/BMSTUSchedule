@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
-import ru.crazy_what.bmstu_shedule.data.shedule.*
+import ru.crazy_what.bmstu_shedule.data.schedule.*
 
 class SchedulerServiceImpl : SchedulerService {
 

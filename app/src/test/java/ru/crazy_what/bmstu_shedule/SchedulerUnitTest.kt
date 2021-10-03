@@ -1,9 +1,9 @@
 package ru.crazy_what.bmstu_shedule
 
 import org.junit.Test
-import ru.crazy_what.bmstu_shedule.data.shedule.getMonday
-import ru.crazy_what.bmstu_shedule.data.shedule.getWeek
-import ru.crazy_what.bmstu_shedule.data.shedule.getWeekOfSchoolYear
+import ru.crazy_what.bmstu_shedule.data.schedule.getMonday
+import ru.crazy_what.bmstu_shedule.data.schedule.getWeek
+import ru.crazy_what.bmstu_shedule.data.schedule.getWeekOfSchoolYear
 import java.util.*
 
 // Тесты всего, что связано с логикой шедулера

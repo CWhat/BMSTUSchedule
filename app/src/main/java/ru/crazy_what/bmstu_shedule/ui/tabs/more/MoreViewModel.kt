@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.screens.tabs.more
+package ru.crazy_what.bmstu_shedule.ui.tabs.more
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

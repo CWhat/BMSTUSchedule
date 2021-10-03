@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.screens.tabs
+package ru.crazy_what.bmstu_shedule.ui.tabs
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.*
+import ru.crazy_what.bmstu_shedule.common.Stack
+import ru.crazy_what.bmstu_shedule.common.peek
+import ru.crazy_what.bmstu_shedule.common.pop
+import ru.crazy_what.bmstu_shedule.common.push
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
 import ru.crazy_what.bmstu_shedule.ui.base_components.*

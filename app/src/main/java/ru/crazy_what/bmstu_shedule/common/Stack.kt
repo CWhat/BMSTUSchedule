@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.screens.tabs
+package ru.crazy_what.bmstu_shedule.common
 
 /**
  * Stack as type alias of Mutable List

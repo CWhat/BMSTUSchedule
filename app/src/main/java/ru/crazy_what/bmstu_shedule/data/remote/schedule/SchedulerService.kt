@@ -1,6 +1,6 @@
 package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
-import ru.crazy_what.bmstu_shedule.data.shedule.BiweeklySchedule
+import ru.crazy_what.bmstu_shedule.data.schedule.BiweeklySchedule
 
 interface SchedulerService {
 

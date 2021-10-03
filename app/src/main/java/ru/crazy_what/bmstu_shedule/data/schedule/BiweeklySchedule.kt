@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.data.shedule
+package ru.crazy_what.bmstu_shedule.data.schedule
 
 // Расписание на две недели
 data class BiweeklySchedule(

@@ -3,7 +3,7 @@ package ru.crazy_what.bmstu_shedule
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
-import ru.crazy_what.bmstu_shedule.data.shedule.SchedulerImpl
+import ru.crazy_what.bmstu_shedule.data.schedule.SchedulerImpl
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerService
 

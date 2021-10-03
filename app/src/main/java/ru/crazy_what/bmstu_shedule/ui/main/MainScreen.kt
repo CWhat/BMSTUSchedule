@@ -22,11 +22,13 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.MainViewModel
 import ru.crazy_what.bmstu_shedule.ui.HollowStar
-import ru.crazy_what.bmstu_shedule.ui.base_components.*
+import ru.crazy_what.bmstu_shedule.ui.base_components.BottomNavBar
+import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components.DateCircleLinePrev
 import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components.LessonsListPrev
-import ru.crazy_what.bmstu_shedule.ui.screens.tabs.SearchStateMachine
-import ru.crazy_what.bmstu_shedule.ui.screens.tabs.more.MoreTab
+import ru.crazy_what.bmstu_shedule.ui.tabs.SearchStateMachine
+import ru.crazy_what.bmstu_shedule.ui.tabs.bookmarks.BookmarksTab
+import ru.crazy_what.bmstu_shedule.ui.tabs.more.MoreTab
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
 val LocalViewModel = compositionLocalOf<MainViewModel> { error("ViewModel не проброшен") }
@@ -68,10 +70,8 @@ fun MainScreen() {
                             }
                         }
                         1 -> {
-                            Column(modifier = Modifier.fillMaxSize()) {
-                                SimpleBasicTopAppBar(title = "Закладки")
-                                LoadView()
-                            }
+                            // TODO добавить открытие расписания
+                            BookmarksTab(clickOnGroups = {})
                         }
                         2 -> {
                             searchStateMachine.buildUI()
