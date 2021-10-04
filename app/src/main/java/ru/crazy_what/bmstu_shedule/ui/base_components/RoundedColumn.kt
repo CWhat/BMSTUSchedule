@@ -106,9 +106,14 @@ fun RoundedColumn(
 
 // TODO добавить Modifier в параметры функции
 @Composable
-fun SimpleList(items: List<String>, onClickItem: (num: Int, item: String) -> Unit) {
+fun SimpleList(
+    items: List<String>,
+    onClickItem: (num: Int, item: String) -> Unit,
+    placeholder: @Composable () -> Unit = {},
+) {
     RoundedColumn(
         count = items.size,
+        placeholder = placeholder,
         onClickItem = { num -> onClickItem(num, items[num]) }) { num ->
         Box(modifier = Modifier.padding(16.dp, 8.dp)) {
             Text(

@@ -2,8 +2,8 @@ package ru.crazy_what.bmstu_shedule.domain.repository
 
 interface SettingsRepository {
 
-    fun getMainGroup(): String
+    suspend fun getMainGroup(): String
 
-    fun getBookmarks(): List<String>
+    suspend fun getBookmarks(): List<String>
 
 }

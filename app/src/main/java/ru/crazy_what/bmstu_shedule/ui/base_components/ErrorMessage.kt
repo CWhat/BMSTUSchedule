@@ -8,7 +8,7 @@ import androidx.compose.ui.text.style.TextAlign
 @Composable
 fun ErrorMessage(text: String, modifier: Modifier = Modifier) {
     Text(
-        text = "При загрузке закладок произошла ошибка: $text",
+        text = text,
         modifier = modifier,
         textAlign = TextAlign.Center,
     )

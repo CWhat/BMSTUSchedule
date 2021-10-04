@@ -16,10 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.*
-import ru.crazy_what.bmstu_shedule.common.Stack
-import ru.crazy_what.bmstu_shedule.common.peek
-import ru.crazy_what.bmstu_shedule.common.pop
-import ru.crazy_what.bmstu_shedule.common.push
+import ru.crazy_what.bmstu_shedule.common.*
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
 import ru.crazy_what.bmstu_shedule.ui.base_components.*
@@ -100,10 +97,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
     ) : SearchState(viewModel) {
 
         private val faculties = groups.map { group ->
-            // Есть кафедра ЮР, так как есть, например, группа ЮР-91
-            // это тоже нужно учитывать
-            val index = group.indexOfFirst { it.isDigit() || it == '-' }
-            group.substring(0, index)
+            group.faculty
         }.distinct()
 
         @Composable
@@ -127,8 +121,7 @@ sealed class SearchState(protected val viewModel: SearchViewModel) {
         private val chairs = groups.filter { group ->
             group.startsWith(faculty)
         }.map { group ->
-            val index = group.indexOfFirst { it == '-' }
-            group.substring(0, index)
+            group.chair
         }.distinct()
 
         @Composable

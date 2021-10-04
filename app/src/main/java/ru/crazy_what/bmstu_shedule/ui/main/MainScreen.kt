@@ -47,21 +47,11 @@ fun MainScreen() {
     val mainNavController = rememberNavController()
     val mainNavGraph = remember {
         mainNavController.createGraph(
-            //startDestination = Constants.ROUTE_SCHEDULE_VIEWER,
             startDestination = "${Constants.ROUTE_SCHEDULE_VIEWER}/${Constants.PARAM_GROUP_NAME}",
-            //startDestination = "${Constants.ROUTE_SCHEDULE_VIEWER}/",
-            //route = "${Constants.ROUTE_SCHEDULE_VIEWER}/ФН2-32Б"
         ) {
             addScheduleViewer("ФН2-32Б")
         }
     }
-    //mainNavController.navigate("${Constants.ROUTE_SCHEDULE_VIEWER}/ФН2-32Б")
-    Log.d("MyLog",
-        (mainNavController.currentBackStackEntry?.destination?.toString() ?: "dest = null")
-    )
-    Log.d("MyLog",
-        (mainNavController.currentBackStackEntry?.destination?.label ?: "label = null") as String
-    )
     val bookmarksNavController = rememberNavController()
     val searchNavController = rememberNavController()
     val moreNavController = rememberNavController()

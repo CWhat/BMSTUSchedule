@@ -27,14 +27,12 @@ class ScheduleViewerViewModel @Inject constructor(
     val state: State<ScheduleViewerState> = _state
 
     init {
-        Log.d("MyLog", "init ViewModel")
         savedStateHandle.get<String>(Constants.PARAM_GROUP_NAME)
             ?.let { groupName -> getSchedule(groupName) }
     }
 
     private fun getSchedule(group: String) {
         _groupName.value = group
-        Log.d("MyLog", "getSchedule")
 
         getGroupSchedule(group).onEach { result ->
             when (result) {
