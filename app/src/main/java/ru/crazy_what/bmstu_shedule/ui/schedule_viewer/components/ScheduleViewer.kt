@@ -14,6 +14,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.LessonWithInfo
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
 // TODO мне кажется, это можно сделать более опрятно
@@ -107,7 +108,9 @@ fun ScheduleViewer(scheduler: Scheduler) {
         ) { pageNum ->
             val day = scheduler.studyDay(pageNum + 1)
 
-            LessonsList(lessons = day)
+            LessonsList(lessonsWithInfo = day.map {
+                LessonWithInfo(lesson = it)
+            })
         }
     }
 }

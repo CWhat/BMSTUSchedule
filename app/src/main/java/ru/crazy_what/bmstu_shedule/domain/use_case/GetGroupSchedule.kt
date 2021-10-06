@@ -17,7 +17,14 @@ class GetGroupSchedule @Inject constructor(private val service: SchedulerService
         when (val scheduleResult = service.schedule(group)) {
             is ResponseResult.Error -> emit(Resource.Error(scheduleResult.message))
             // TODO SchedulerImpl надо брать из другого места (откуда-то из data)
-            is ResponseResult.Success -> emit(Resource.Success(SchedulerImpl(scheduleResult.data) as Scheduler))
+            is ResponseResult.Success -> emit(
+                Resource.Success(
+                    SchedulerImpl(
+                        groupName = group,
+                        scheduleResult.data
+                    ) as Scheduler
+                )
+            )
         }
     }
 }

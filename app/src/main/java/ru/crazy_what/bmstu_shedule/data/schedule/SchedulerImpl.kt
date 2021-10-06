@@ -2,14 +2,15 @@ package ru.crazy_what.bmstu_shedule.data.schedule
 
 import ru.crazy_what.bmstu_shedule.date.Date
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
-import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.date.Month
+import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import java.util.*
 
 // TODO мне кажется, это стоит оптимизировать. Как я понял, работа с Calendar не очень быстрая
 // TODO начало семестра и количество дней и недель лучше передавать в конструктор
 class SchedulerImpl(
+    private val groupName: String,
     private val biweeklySchedule: BiweeklySchedule
 ) : Scheduler {
     private var currentDate = Calendar.getInstance()
@@ -58,7 +59,7 @@ class SchedulerImpl(
             else -> error("Как такое возможно?")
         }
 
-        return lessonList
+        return lessonList.map { it.toLesson(listOf(groupName)) }
     }
 
     // TODO сделать проверку на границы

@@ -62,7 +62,10 @@ fun BasicTopAppBarPainter(
     rightIconContentDescription: String = "",
     byRightClick: () -> Unit = {}
 ) {
-    TopAppBar(modifier = Modifier.fillMaxWidth(), backgroundColor = Color.White) {
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background
+    ) {
         if (leftIcon != null) {
             IconButton(modifier = Modifier.padding(start = 8.dp), onClick = byLeftClick) {
                 SquareIcon(painter = leftIcon, contentDescription = leftIconContentDescription)
@@ -118,7 +121,10 @@ fun SimpleBasicTopAppBar(title: String) {
 fun SearchTopAppBar(hint: String = "Поиск", onValueChange: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
 
-    TopAppBar(modifier = Modifier.fillMaxWidth(), backgroundColor = Color.White) {
+    TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background
+    ) {
         // TODO как убрать подчеркивание у текста?
         // TODO как увеличить высоту текстового поля?
         TextField(
@@ -151,9 +157,10 @@ fun SearchTopAppBar(hint: String = "Поиск", onValueChange: (String) -> Unit
             },
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
-                cursorColor = Color.Black,
+                cursorColor = MaterialTheme.colors.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
+                // TODO убрать хардкод
                 leadingIconColor = Color.Gray,
                 trailingIconColor = Color.Gray,
                 placeholderColor = Color.Gray

@@ -5,7 +5,6 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.data.Lesson
 import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import ru.crazy_what.bmstu_shedule.data.schedule.*
 
@@ -70,12 +69,12 @@ class SchedulerServiceImpl : SchedulerService {
                 return@withContext ResponseResult.error("Ошибка при парсинге расписания по ссылке $url")
             }
 
-            val numeratorList = mutableListWithCapacity<List<Lesson>>(6)
-            val denominatorList = mutableListWithCapacity<List<Lesson>>(6)
+            val numeratorList = mutableListWithCapacity<List<LessonDto>>(6)
+            val denominatorList = mutableListWithCapacity<List<LessonDto>>(6)
 
             for (table in tables) {
-                val dayOfNumerator = mutableListOf<Lesson>()
-                val dayOfDenominator = mutableListOf<Lesson>()
+                val dayOfNumerator = mutableListOf<LessonDto>()
+                val dayOfDenominator = mutableListOf<LessonDto>()
 
                 // Получем строки
                 val trs = table.getElementsByTag("tr")
@@ -91,19 +90,19 @@ class SchedulerServiceImpl : SchedulerService {
                         // Возможно, есть расписание и на числитель, и на знаменатель
                         val numeratorPair = tds[1]
                         if (numeratorPair.text().isNotBlank()) {
-                            val lesson = tdToLesson(numeratorPair, time)
+                            val lesson = tdToLessonDto(numeratorPair, time)
                             dayOfNumerator.add(lesson)
                         }
                         val denominatorPair = tds[2]
                         if (denominatorPair.text().isNotBlank()) {
-                            val lesson = tdToLesson(denominatorPair, time)
+                            val lesson = tdToLessonDto(denominatorPair, time)
                             dayOfDenominator.add(lesson)
                         }
 
                     } else {
                         // расписание и на числитель, и на знаменатель одинаковое
                         val pair = tds[1]
-                        val lesson = tdToLesson(pair, time)
+                        val lesson = tdToLessonDto(pair, time)
 
                         dayOfNumerator.add(lesson)
                         dayOfDenominator.add(lesson)
@@ -143,19 +142,19 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     // TODO конвертировать в новый Lesson
-    private fun tdToLesson(td: Element, time: String): Lesson {
+    private fun tdToLessonDto(td: Element, time: String): LessonDto {
         if (td.childrenSize() != 4)
             error("Я не понимаю такое расписание")
 
-        val (timeStart, timeEnd) = time.split(' ', limit = 2)
+        val (beginTime, endTime) = time.split(' ', limit = 2)
 
         var itemText = td.child(0).text()
-        val type = if (itemText.isBlank()) null
-        else if (itemText.startsWith('(') && itemText.endsWith(')')) {
+        val type = if (itemText.startsWith('(') && itemText.endsWith(')')) {
             // Это тип пары
             // Убираем первую и последнюю скобку
             itemText.substring(1, itemText.length - 1)
-        } else {
+        } else if (itemText.isBlank()) ""
+        else {
             itemText
         }
 
@@ -165,19 +164,19 @@ class SchedulerServiceImpl : SchedulerService {
 
         // Третий элемент - это кабинет
         itemText = td.child(2).text()
-        val room = if (itemText.isNotBlank()) itemText else null
+        val cabinet = if (itemText.isBlank()) "" else itemText
 
         // Четвертый - это преподаватель
         itemText = td.child(3).text()
-        val teacher = if (itemText.isNotBlank()) itemText else null
+        val teachers = if (itemText.isBlank()) "" else itemText
 
-        return Lesson(
-            timeStart = timeStart,
-            timeEnd = timeEnd,
+        return LessonDto(
+            beginTime = beginTime,
+            endTime = endTime,
             type = type,
             name = name,
-            teacher = teacher,
-            room = room,
+            teachers = teachers,
+            cabinet = cabinet,
         )
     }
 }

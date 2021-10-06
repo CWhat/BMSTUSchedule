@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreVert
@@ -56,7 +57,10 @@ fun BottomNavBar(
     if (state.value >= icons.size)
         error("Неверное состояние")
 
-    BottomAppBar(modifier = Modifier.fillMaxWidth(), backgroundColor = Color.White) {
+    BottomAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -71,7 +75,8 @@ fun BottomNavBar(
                     SquareIcon(
                         imageVector = icons[i],
                         contentDescription = if (iconsDescriptions != null) iconsDescriptions[i] else "",
-                        tint = if (state.value == i) Color.Black else Color.LightGray
+                        // TODO убрать хардкод
+                        tint = if (state.value == i) MaterialTheme.colors.primary else Color.Gray
                     )
                 }
             }

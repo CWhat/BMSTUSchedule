@@ -1,8 +1,6 @@
 package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,7 +13,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import ru.crazy_what.bmstu_shedule.data.Lesson
+import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 import ru.crazy_what.bmstu_shedule.ui.cardCorner
 import ru.crazy_what.bmstu_shedule.ui.cardElevation
 import ru.crazy_what.bmstu_shedule.ui.cardZIndex
@@ -28,6 +27,36 @@ import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 @Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
 @Composable
 fun LessonCardPrev() {
+    val fakeData = listOf(
+        Lesson(
+            type = "лек",
+            beginTime = Time(13, 50),
+            endTime = Time(15, 25),
+            name = "Кратные интегралы и ряды",
+            teachers = listOf("Марчевский И.К."),
+            cabinet = "212л",
+            groups = emptyList(),
+        ),
+        Lesson(
+            type = "лек",
+            beginTime = Time(13, 50),
+            endTime = Time(15, 25),
+            name = "Кратные интегралы и ряды",
+            teachers = emptyList(),
+            cabinet = "212л",
+            groups = emptyList(),
+        ),
+        Lesson(
+            type = "лек",
+            beginTime = Time(13, 50),
+            endTime = Time(15, 25),
+            name = "Кратные интегралы и ряды",
+            teachers = listOf("Марчевский И.К."),
+            cabinet = "212л",
+            groups = emptyList(),
+        )
+    )
+
     BMSTUScheduleTheme {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
@@ -43,46 +72,6 @@ fun LessonCardPrev() {
     }
 }
 
-@Preview(showBackground = true, device = Devices.PIXEL_4, showSystemUi = true)
-@Composable
-fun LessonsListPrev() {
-    BMSTUScheduleTheme(darkTheme = false) {
-        LessonsList(
-            lessons = fakeData,
-            messageFromAbove = Pair(0, "через 10ч 23мин"),
-            messageBelow = Pair(2, "осталось 1ч 15мин"),
-            progress = Pair(2, 0.21F),
-        )
-    }
-}
-
-private val fakeData = listOf(
-    Lesson(
-        type = "лек",
-        timeStart = "13:50",
-        timeEnd = "15:25",
-        name = "Кратные интегралы и ряды",
-        teacher = "Марчевский И.К.",
-        room = "212л",
-    ),
-    Lesson(
-        type = "лек",
-        timeStart = "13:50",
-        timeEnd = "15:25",
-        name = "Кратные интегралы и ряды",
-        room = "212л"
-    ),
-    Lesson(
-        type = "лек",
-        timeStart = "13:50",
-        timeEnd = "15:25",
-        name = "Кратные интегралы и ряды",
-        teacher = "Марчевский И.К.",
-        room = "212л",
-    )
-)
-
-
 @Composable
 fun LessonCard(
     lesson: Lesson,
@@ -95,13 +84,16 @@ fun LessonCard(
             .fillMaxWidth()
             .zIndex(cardZIndex),
         shape = RoundedCornerShape(cardCorner),
-        elevation = cardElevation
+        elevation = cardElevation,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             if (messageFromAbove != null) {
                 Surface(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colors.primary) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text(text = messageFromAbove, style = infoStyle)
+                        Text(
+                            text = messageFromAbove,
+                            style = infoStyle,
+                        )
                     }
                 }
             }
@@ -109,23 +101,30 @@ fun LessonCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, top = 4.dp, end = 16.dp, 0.dp)
+                    .padding(start = 16.dp, top = 4.dp, end = 16.dp, 0.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "${lesson.timeStart}-${lesson.timeEnd}" +
-                            (if (lesson.room != null) ", каб.: ${lesson.room}" else "") +
-                            if (!lesson.type.isNullOrEmpty()) ", ${lesson.type}" else "",
-                    style = infoStyle
+                    text = "${lesson.beginTime}-${lesson.endTime}" +
+                            if (lesson.type.isNotEmpty()) ", ${lesson.type}" else "",
+                    style = infoStyle,
+                )
+                Text(
+                    text = if (lesson.cabinet.isNotEmpty()) "каб.: ${lesson.cabinet}" else "",
+                    style = infoStyle,
                 )
             }
+
+            // TODO убрать куда-нибудь в константы
+            val dividerHeight = 2.dp
 
             if (timeProgress == null) {
                 Divider(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp, 4.dp),
-                    thickness = 2.dp,
-                    color = Color.Gray
+                    thickness = dividerHeight,
+                    color = Color.Gray,
                 )
             } else {
                 LinearProgressIndicator(
@@ -133,9 +132,9 @@ fun LessonCard(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp, 4.dp)
-                        .height(2.dp),
+                        .height(dividerHeight),
                     color = MaterialTheme.colors.primary,
-                    backgroundColor = Color.Green
+                    backgroundColor = Color.Green,
                 )
             }
 
@@ -144,18 +143,19 @@ fun LessonCard(
                 text = lesson.name,
                 style = titleStyle,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
-            if (lesson.teacher != null) {
+            val teachers = lesson.teachers.toTeachersLine()
+            if (teachers.isNotBlank()) {
                 Text(
                     modifier = Modifier.padding(
                         start = 16.dp,
                         top = 0.dp,
                         end = 16.dp,
-                        bottom = 4.dp
+                        bottom = 4.dp,
                     ),
                     style = teacherStyle,
-                    text = lesson.teacher
+                    text = teachers,
                 )
             } else {
                 CompositionLocalProvider(LocalContentColor provides Color.Gray) {
@@ -164,10 +164,10 @@ fun LessonCard(
                             start = 16.dp,
                             top = 0.dp,
                             end = 16.dp,
-                            bottom = 4.dp
+                            bottom = 4.dp,
                         ),
                         style = teacherStyle,
-                        text = "Преподаватель не указан"
+                        text = "Преподаватель не указан",
                     )
                 }
             }
@@ -183,26 +183,10 @@ fun LessonCard(
     }
 }
 
-// TODO переработать
-// У messageBelow и messageFromAbove первый параметр - это индекс элемента, второй - текст сообщения
-// У progress первый параметр - это индекс элемента, второй - значения прогрессбара
-@Composable
-fun LessonsList(
-    lessons: List<Lesson>,
-    messageBelow: Pair<Int, String>? = null,
-    messageFromAbove: Pair<Int, String>? = null,
-    progress: Pair<Int, Float>? = null
-) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        itemsIndexed(lessons) { index, lesson ->
-            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                LessonCard(
-                    lesson,
-                    timeProgress = if (progress != null && index == progress.first) progress.second else null,
-                    messageFromAbove = if (messageFromAbove != null && index == messageFromAbove.first) messageFromAbove.second else null,
-                    messageBelow = if (messageBelow != null && index == messageBelow.first) messageBelow.second else null,
-                )
-            }
-        }
-    }
+fun List<String>.toTeachersLine(): String {
+    var res = if (this.isNotEmpty()) this[0] else ""
+    for (i in 1 until this.size)
+        res += ", " + this[i]
+
+    return res
 }

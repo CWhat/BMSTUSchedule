@@ -1,6 +1,5 @@
 package ru.crazy_what.bmstu_shedule.ui.main
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +26,6 @@ import ru.crazy_what.bmstu_shedule.MainViewModel
 import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.ui.HollowStar
 import ru.crazy_what.bmstu_shedule.ui.base_components.BottomNavBar
-import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.ScheduleViewerScreen
 import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.addScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.tabs.SearchStateMachine
 import ru.crazy_what.bmstu_shedule.ui.tabs.bookmarks.BookmarksTab
@@ -56,7 +54,7 @@ fun MainScreen() {
     val searchNavController = rememberNavController()
     val moreNavController = rememberNavController()
 
-    BMSTUScheduleTheme(darkTheme = false) {
+    BMSTUScheduleTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),

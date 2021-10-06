@@ -9,9 +9,8 @@ import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 // TODO в чем отличие StateFlow от Flow?
 @Composable
 fun LessonsList(lessonsListState: Flow<LessonsListState>) {
-    val state = lessonsListState.collectAsState(initial = LessonsListState.Loading).value
 
-    when (state) {
+    when (val state = lessonsListState.collectAsState(initial = LessonsListState.Loading).value) {
         is LessonsListState.Loading -> CircularProgressIndicator()
         is LessonsListState.Error -> ErrorMessage(text = state.message)
         is LessonsListState.Lessons -> {

@@ -37,7 +37,7 @@ class MainViewModel : ViewModel() {
         if (respResult is ResponseResult.Error) scheduleFlow.emit(ResponseResult.error(respResult.message))
         else scheduleFlow.emit(
             ResponseResult.success(
-                SchedulerImpl((respResult as ResponseResult.Success).data)
+                SchedulerImpl(groupName = group, (respResult as ResponseResult.Success).data)
             )
         )
     }

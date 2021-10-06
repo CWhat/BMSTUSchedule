@@ -15,3 +15,9 @@ data class Time(
 //        // TODO
 //    }
 }
+
+// TODO стоит добавить проверку ошибок
+fun String.toTime(delimiter: String = ":"): Time {
+    val list = this.split(delimiter)
+    return Time(list[0].toInt(), list[1].toInt())
+}

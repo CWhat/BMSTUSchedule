@@ -82,7 +82,7 @@ fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
     val (backgroundColor, borderColor, textColor) = when (state) {
         DateCircleState.NONE -> Triple(
             MaterialTheme.colors.surface, // цвет фона
-            Color.Gray, // цвет ободка
+            Color.Gray, // цвет ободка // TODO убрать хардкод
             MaterialTheme.colors.onSurface // цвет текста
         )
         DateCircleState.CURRENT -> Triple(
@@ -93,7 +93,7 @@ fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
         DateCircleState.SELECT -> Triple(
             MaterialTheme.colors.primary,
             MaterialTheme.colors.primary,
-            MaterialTheme.colors.surface
+            MaterialTheme.colors.onPrimary
         )
     }
 
