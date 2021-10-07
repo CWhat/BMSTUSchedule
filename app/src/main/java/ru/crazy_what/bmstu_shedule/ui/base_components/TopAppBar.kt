@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 import ru.crazy_what.bmstu_shedule.ui.theme.searchTitleStyle
 import ru.crazy_what.bmstu_shedule.ui.theme.titleAppBarStyle

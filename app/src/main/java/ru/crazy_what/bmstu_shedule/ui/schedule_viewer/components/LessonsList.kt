@@ -5,14 +5,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import ru.crazy_what.bmstu_shedule.date.Time
 import ru.crazy_what.bmstu_shedule.domain.model.Lesson
-import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.LessonWithInfo
+import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.model.LessonWithInfo
 import ru.crazy_what.bmstu_shedule.ui.sidePaddingOfCard
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
@@ -63,9 +69,6 @@ fun LessonsListPrev() {
     }
 }
 
-// TODO переработать
-// У messageBelow и messageFromAbove первый параметр - это индекс элемента, второй - текст сообщения
-// У progress первый параметр - это индекс элемента, второй - значения прогрессбара
 @Composable
 fun LessonsList(
     lessonsWithInfo: List<LessonWithInfo>,
@@ -84,4 +87,23 @@ fun LessonsList(
             }
         }
     }
+}
+
+// TODO в чем отличие StateFlow от Flow?
+@Composable
+fun LessonsList(lessonsListState: Flow<LessonsListState>) {
+
+    when (val state = lessonsListState.buffer(onBufferOverflow = BufferOverflow.DROP_OLDEST)
+        .collectAsState(initial = LessonsListState.Loading).value) {
+        is LessonsListState.Loading -> {
+            // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
+            // с этим надо что-то делать
+            //CircularProgressIndicator()
+        }
+        is LessonsListState.Error -> ErrorMessage(text = state.message)
+        is LessonsListState.Lessons -> {
+            LessonsList(lessonsWithInfo = state.lessonsWithInfo)
+        }
+    }
+
 }

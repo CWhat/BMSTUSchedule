@@ -1,5 +1,6 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer
+package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
 
+import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.model.LessonWithInfo
 
 sealed class LessonsListState {
     object Loading : LessonsListState()

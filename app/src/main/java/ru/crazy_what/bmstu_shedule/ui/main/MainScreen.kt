@@ -29,6 +29,7 @@ import ru.crazy_what.bmstu_shedule.ui.base_components.BottomNavBar
 import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.addScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.tabs.SearchStateMachine
 import ru.crazy_what.bmstu_shedule.ui.tabs.bookmarks.BookmarksTab
+import ru.crazy_what.bmstu_shedule.ui.tabs.main.MainTab
 import ru.crazy_what.bmstu_shedule.ui.tabs.more.MoreTab
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
@@ -37,19 +38,14 @@ val LocalViewModel = compositionLocalOf<MainViewModel> { error("ViewModel не �
 @ExperimentalPagerApi
 @Composable
 fun MainScreen() {
+    val groupName = "ФН2-32Б"
+
     val pagerState = rememberPagerState(pageCount = 4, initialOffscreenLimit = 3)
     val coroutineScope = rememberCoroutineScope()
 
     val searchStateMachine = SearchStateMachine(LocalViewModel.current)
 
-    val mainNavController = rememberNavController()
-    val mainNavGraph = remember {
-        mainNavController.createGraph(
-            startDestination = "${Constants.ROUTE_SCHEDULE_VIEWER}/${Constants.PARAM_GROUP_NAME}",
-        ) {
-            addScheduleViewer("ФН2-32Б")
-        }
-    }
+    // TODO возможно, здесь стоит создавать ViewModel с помощью hiltViewModel
     val bookmarksNavController = rememberNavController()
     val searchNavController = rememberNavController()
     val moreNavController = rememberNavController()
@@ -72,11 +68,7 @@ fun MainScreen() {
                 ) { page ->
                     when (page) {
                         0 -> {
-                            NavHost(
-                                navController = mainNavController,
-                                graph = mainNavGraph,
-                                modifier = Modifier.fillMaxSize()
-                            )
+                            MainTab()
                         }
                         1 -> {
                             // TODO добавить открытие расписания

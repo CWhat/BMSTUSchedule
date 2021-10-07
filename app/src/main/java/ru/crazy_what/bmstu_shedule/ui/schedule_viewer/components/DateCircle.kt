@@ -29,7 +29,7 @@ import kotlin.math.max
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
-fun DateCircleLinePrev() {
+fun DateCirclePrev() {
     BMSTUScheduleTheme(darkTheme = false) {
         Row(
             modifier = Modifier.fillMaxWidth(),

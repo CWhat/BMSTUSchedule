@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer
+package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.model
 
 import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 

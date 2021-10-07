@@ -109,6 +109,7 @@ fun LessonCard(
                             if (lesson.type.isNotEmpty()) ", ${lesson.type}" else "",
                     style = infoStyle,
                 )
+                // TODO сюда можно добавить иконку Icons.Default.Place
                 Text(
                     text = if (lesson.cabinet.isNotEmpty()) "каб.: ${lesson.cabinet}" else "",
                     style = infoStyle,
