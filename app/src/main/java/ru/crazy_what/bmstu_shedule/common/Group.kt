@@ -15,3 +15,15 @@ val Group.chair: String
         val index = this.indexOfFirst { it == '-' }
         return this.substring(0, index)
     }
+
+// Приводит к строку к более правильному формату вида ФН2-32Б, вместо, например, фн2 32б
+// TODO это явно можно ускорить, но мне пока лень
+fun normalizeGroupName(str: String): Group {
+    var res = str
+    while (res.startsWith(" ")) res = res.removePrefix(" ")
+    while (res.endsWith(" ")) res = res.removeSuffix(" ")
+    while (res.contains("  ")) res.replace("  ", " ")
+    res = res.replace(" ", "-")
+    res = res.uppercase()
+    return res
+}

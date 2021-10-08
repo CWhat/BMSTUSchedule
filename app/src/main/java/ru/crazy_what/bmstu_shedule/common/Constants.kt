@@ -14,4 +14,6 @@ object Constants {
     const val PARAM_CHAIR = "chair"
 
     const val BOOKMARKS_DATABASE = "bookmarks"
+    const val LESSONS_DATABASE = "lessons"
+    const val GROUPS_COLUMN_NAME = "groups"
 }
