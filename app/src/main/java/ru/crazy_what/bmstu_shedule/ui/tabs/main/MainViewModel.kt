@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getMainGroup: GetMainGroup
+    private val getMainGroup: GetMainGroup,
 ) : ViewModel() {
 
     private val _state = mutableStateOf<MainState>(MainState.Loading)

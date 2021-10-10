@@ -1,12 +1,17 @@
 package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.data.mutableListWithCapacity
 import ru.crazy_what.bmstu_shedule.data.schedule.*
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
+import ru.crazy_what.bmstu_shedule.date.toTime
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
+import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
+import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 
 class SchedulerServiceImpl : SchedulerService {
 
@@ -48,7 +53,7 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     // TODO выглядит слишком страшно, надо бы отрефакторить
-    override suspend fun schedule(group: String): ResponseResult<BiweeklySchedule> {
+    override suspend fun schedule(group: String): ResponseResult<GroupSchedule> {
         // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
             if (!groupsMapIsInitialized)
@@ -69,80 +74,34 @@ class SchedulerServiceImpl : SchedulerService {
                 return@withContext ResponseResult.error("Ошибка при парсинге расписания по ссылке $url")
             }
 
-            val numeratorList = mutableListWithCapacity<List<LessonDto>>(6)
-            val denominatorList = mutableListWithCapacity<List<LessonDto>>(6)
-
-            for (table in tables) {
-                val dayOfNumerator = mutableListOf<LessonDto>()
-                val dayOfDenominator = mutableListOf<LessonDto>()
-
-                // Получем строки
-                val trs = table.getElementsByTag("tr")
-                // Пропускаем первые две строки, потому что там строки с днем недели и
-                // с подписями числителя и знаменателя
-                for (i in 2 until trs.size) {
-                    val tr = trs[i]
-                    // Получаем столбцы
-                    val tds = tr.getElementsByTag("td")
-                    val time = tds[0].text() // текст с временем
-
-                    if (tds.size == 3) {
-                        // Возможно, есть расписание и на числитель, и на знаменатель
-                        val numeratorPair = tds[1]
-                        if (numeratorPair.text().isNotBlank()) {
-                            val lesson = tdToLessonDto(numeratorPair, time)
-                            dayOfNumerator.add(lesson)
-                        }
-                        val denominatorPair = tds[2]
-                        if (denominatorPair.text().isNotBlank()) {
-                            val lesson = tdToLessonDto(denominatorPair, time)
-                            dayOfDenominator.add(lesson)
-                        }
-
-                    } else {
-                        // расписание и на числитель, и на знаменатель одинаковое
-                        val pair = tds[1]
-                        val lesson = tdToLessonDto(pair, time)
-
-                        dayOfNumerator.add(lesson)
-                        dayOfDenominator.add(lesson)
-                    }
-                }
-
-                numeratorList.add(dayOfNumerator)
-                denominatorList.add(dayOfDenominator)
+            val lessonsMap = mutableMapOf<Pair<WeekType, DayOfWeek>, List<GroupLesson>>()
+            // В воскресенье не занятий
+            for (dayOfWeekOrdinal in 0 until DayOfWeek.values().size - 1) {
+                val dayOfWeek = DayOfWeek.values()[dayOfWeekOrdinal]
+                val (numLessons, denomLessons) = tableToLessonsList(
+                    table = tables[dayOfWeekOrdinal],
+                    dayOfWeek = dayOfWeek
+                )
+                lessonsMap[Pair(WeekType.NUMERATOR, dayOfWeek)] = numLessons
+                lessonsMap[Pair(WeekType.DENOMINATOR, dayOfWeek)] = denomLessons
             }
 
-            val numerator = WeekSchedule(
-                monday = numeratorList[0],
-                tuesday = numeratorList[1],
-                wednesday = numeratorList[2],
-                thursday = numeratorList[3],
-                friday = numeratorList[4],
-                saturday = numeratorList[5]
-            )
-
-            val denominator = WeekSchedule(
-                monday = denominatorList[0],
-                tuesday = denominatorList[1],
-                wednesday = denominatorList[2],
-                thursday = denominatorList[3],
-                friday = denominatorList[4],
-                saturday = denominatorList[5]
-            )
-
             return@withContext ResponseResult.success(
-                BiweeklySchedule(
-                    numerator,
-                    denominator
+                GroupSchedule(
+                    groupName = group,
+                    lessons = lessonsMap,
                 )
             )
         }
         return result
     }
 
-    // TODO конвертировать в новый Lesson
-    private fun tdToLessonDto(td: Element, time: String): LessonDto {
+    private fun tdToLessonDto(
+        td: Element,
+        time: String,
+        weekType: WeekType,
+        dayOfWeek: DayOfWeek
+    ): GroupLesson {
         if (td.childrenSize() != 4)
             error("Я не понимаю такое расписание")
 
@@ -170,13 +129,84 @@ class SchedulerServiceImpl : SchedulerService {
         itemText = td.child(3).text()
         val teachers = if (itemText.isBlank()) "" else itemText
 
-        return LessonDto(
-            beginTime = beginTime,
-            endTime = endTime,
-            type = type,
-            name = name,
-            teachers = teachers,
-            cabinet = cabinet,
-        )
+        return GroupLesson(
+            info = LessonInfo(
+                weekType = weekType,
+                dayOfWeek = dayOfWeek,
+                beginTime = beginTime.toTime(),
+                endTime = endTime.toTime(),
+                type = type,
+                name = name,
+                cabinet = cabinet,
+            ),
+            teachers = listOf(teachers),
+
+            )
+    }
+
+    private fun tableToLessonsList(
+        table: Element,
+        dayOfWeek: DayOfWeek,
+    ): Pair<List<GroupLesson>, List<GroupLesson>> {
+        val dayOfNumerator = mutableListOf<GroupLesson>()
+        val dayOfDenominator = mutableListOf<GroupLesson>()
+
+        // Получем строки
+        val trs = table.getElementsByTag("tr")
+        // Пропускаем первые две строки, потому что там строки с днем недели и
+        // с подписями числителя и знаменателя
+        for (i in 2 until trs.size) {
+            val tr = trs[i]
+            // Получаем столбцы
+            val tds = tr.getElementsByTag("td")
+            val time = tds[0].text() // текст с временем
+
+            if (tds.size == 3) {
+                // Возможно, есть расписание и на числитель, и на знаменатель
+                val numeratorPair = tds[1]
+                if (numeratorPair.text().isNotBlank()) {
+                    val lesson =
+                        tdToLessonDto(
+                            numeratorPair,
+                            time,
+                            weekType = WeekType.NUMERATOR,
+                            dayOfWeek = dayOfWeek,
+                        )
+                    dayOfNumerator.add(lesson)
+                }
+                val denominatorPair = tds[2]
+                if (denominatorPair.text().isNotBlank()) {
+                    val lesson = tdToLessonDto(
+                        denominatorPair,
+                        time,
+                        weekType = WeekType.DENOMINATOR,
+                        dayOfWeek = dayOfWeek,
+                    )
+                    dayOfDenominator.add(lesson)
+                }
+
+            } else {
+                // расписание и на числитель, и на знаменатель одинаковое
+                val pair = tds[1]
+                val numLesson = tdToLessonDto(pair, time, WeekType.NUMERATOR, dayOfWeek)
+                val denomLesson = GroupLesson(
+                    info = LessonInfo(
+                        weekType = WeekType.DENOMINATOR,
+                        dayOfWeek = dayOfWeek,
+                        beginTime = numLesson.info.beginTime,
+                        endTime = numLesson.info.endTime,
+                        type = numLesson.info.type,
+                        name = numLesson.info.name,
+                        cabinet = numLesson.info.cabinet,
+                    ),
+                    teachers = numLesson.teachers,
+                )
+
+                dayOfNumerator.add(numLesson)
+                dayOfDenominator.add(denomLesson)
+            }
+        }
+
+        return Pair(dayOfNumerator, dayOfDenominator)
     }
 }

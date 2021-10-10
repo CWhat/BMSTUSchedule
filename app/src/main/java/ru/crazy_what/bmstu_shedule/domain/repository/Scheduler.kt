@@ -3,6 +3,7 @@ package ru.crazy_what.bmstu_shedule.domain.repository
 import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 import ru.crazy_what.bmstu_shedule.data.schedule.StudyDayInfo
 import ru.crazy_what.bmstu_shedule.data.schedule.WeekInfo
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 
 // TODO сделать тестовую реализацию
 // TODO как сделать редактор расписания?
@@ -25,7 +26,7 @@ interface Scheduler {
     val currentWeek: Int?
     val currentDay: Int?
 
-    fun studyDay(studyDayNum: Int): List<Lesson>
+    fun studyDay(studyDayNum: Int): List<GroupLesson>
 
     // TODO возможно надо возвращать WeekInfo?
     fun studyWeekInfo(weekNum: Int): WeekInfo

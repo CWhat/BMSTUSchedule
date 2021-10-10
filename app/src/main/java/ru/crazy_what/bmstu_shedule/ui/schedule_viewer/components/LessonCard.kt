@@ -13,8 +13,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.Lesson
+import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 import ru.crazy_what.bmstu_shedule.ui.cardCorner
 import ru.crazy_what.bmstu_shedule.ui.cardElevation
 import ru.crazy_what.bmstu_shedule.ui.cardZIndex
@@ -28,32 +32,41 @@ import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 @Composable
 fun LessonCardPrev() {
     val fakeData = listOf(
-        Lesson(
-            type = "лек",
-            beginTime = Time(13, 50),
-            endTime = Time(15, 25),
-            name = "Кратные интегралы и ряды",
+        GroupLesson(
+            info = LessonInfo(
+                weekType = WeekType.NUMERATOR,
+                dayOfWeek = DayOfWeek.MONDAY,
+                type = "лек",
+                beginTime = Time(13, 50),
+                endTime = Time(15, 25),
+                name = "Кратные интегралы и ряды",
+                cabinet = "212л",
+            ),
             teachers = listOf("Марчевский И.К."),
-            cabinet = "212л",
-            groups = emptyList(),
         ),
-        Lesson(
-            type = "лек",
-            beginTime = Time(13, 50),
-            endTime = Time(15, 25),
-            name = "Кратные интегралы и ряды",
+        GroupLesson(
+            info = LessonInfo(
+                weekType = WeekType.NUMERATOR,
+                dayOfWeek = DayOfWeek.MONDAY,
+                type = "лек",
+                beginTime = Time(13, 50),
+                endTime = Time(15, 25),
+                name = "Кратные интегралы и ряды",
+                cabinet = "212л",
+            ),
             teachers = emptyList(),
-            cabinet = "212л",
-            groups = emptyList(),
         ),
-        Lesson(
-            type = "лек",
-            beginTime = Time(13, 50),
-            endTime = Time(15, 25),
-            name = "Кратные интегралы и ряды",
+        GroupLesson(
+            info = LessonInfo(
+                weekType = WeekType.NUMERATOR,
+                dayOfWeek = DayOfWeek.MONDAY,
+                type = "лек",
+                beginTime = Time(13, 50),
+                endTime = Time(15, 25),
+                name = "Кратные интегралы и ряды",
+                cabinet = "212л"
+            ),
             teachers = listOf("Марчевский И.К."),
-            cabinet = "212л",
-            groups = emptyList(),
         )
     )
 
@@ -74,7 +87,7 @@ fun LessonCardPrev() {
 
 @Composable
 fun LessonCard(
-    lesson: Lesson,
+    lesson: GroupLesson,
     timeProgress: Float? = null,
     messageFromAbove: String? = null,
     messageBelow: String? = null,
@@ -105,13 +118,13 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "${lesson.beginTime}-${lesson.endTime}" +
-                            if (lesson.type.isNotEmpty()) ", ${lesson.type}" else "",
+                    text = "${lesson.info.beginTime}-${lesson.info.endTime}" +
+                            if (lesson.info.type.isNotEmpty()) ", ${lesson.info.type}" else "",
                     style = infoStyle,
                 )
                 // TODO сюда можно добавить иконку Icons.Default.Place
                 Text(
-                    text = if (lesson.cabinet.isNotEmpty()) "каб.: ${lesson.cabinet}" else "",
+                    text = if (lesson.info.cabinet.isNotEmpty()) "каб.: ${lesson.info.cabinet}" else "",
                     style = infoStyle,
                 )
             }
@@ -141,12 +154,12 @@ fun LessonCard(
 
             Text(
                 modifier = Modifier.padding(16.dp, 0.dp),
-                text = lesson.name,
+                text = lesson.info.name,
                 style = titleStyle,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            val teachers = lesson.teachers.toTeachersLine()
+            val teachers = lesson.teachers.joinToString(separator = ", ")
             if (teachers.isNotBlank()) {
                 Text(
                     modifier = Modifier.padding(
@@ -182,12 +195,4 @@ fun LessonCard(
             }
         }
     }
-}
-
-fun List<String>.toTeachersLine(): String {
-    var res = if (this.isNotEmpty()) this[0] else ""
-    for (i in 1 until this.size)
-        res += ", " + this[i]
-
-    return res
 }

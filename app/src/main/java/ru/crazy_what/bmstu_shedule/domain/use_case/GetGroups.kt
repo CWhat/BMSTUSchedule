@@ -1,13 +1,14 @@
 package ru.crazy_what.bmstu_shedule.domain.use_case
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
-import ru.crazy_what.bmstu_shedule.data.remote.schedule.ResponseResult
-import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerService
+import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import javax.inject.Inject
 
-class GetGroups @Inject constructor(private val service: SchedulerService) {
+// старый вариант без использования базы данных, вдруг пригодится
+/*class GetGroups @Inject constructor(private val service: SchedulerService) {
 
     operator fun invoke(): Flow<Resource<List<String>>> = flow {
         emit(Resource.Loading())
@@ -15,6 +16,17 @@ class GetGroups @Inject constructor(private val service: SchedulerService) {
             is ResponseResult.Error -> emit(Resource.Error(groupsResult.message))
             is ResponseResult.Success -> emit(Resource.Success(groupsResult.data))
         }
+    }
+
+}*/
+
+class GetGroups @Inject constructor(private val groupScheduleRepository: GroupScheduleRepository) {
+
+    operator fun invoke(): Flow<Resource<List<String>>> = flow {
+        emit(Resource.Loading())
+        val groups = groupScheduleRepository.getAllGroupsName()
+
+        emit(Resource.Success(groups))
     }
 
 }

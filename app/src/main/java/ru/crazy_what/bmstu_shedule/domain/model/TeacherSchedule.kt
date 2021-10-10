@@ -5,5 +5,5 @@ import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 
 data class TeacherSchedule(
     val teacher: String,
-    val lessons: Map<Pair<WeekType, DayOfWeek>, TeacherLesson>,
+    val lessons: Map<Pair<WeekType, DayOfWeek>, List<TeacherLesson>>,
 )

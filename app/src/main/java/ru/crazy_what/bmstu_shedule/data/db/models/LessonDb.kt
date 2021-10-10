@@ -7,11 +7,11 @@ import ru.crazy_what.bmstu_shedule.data.db.converters.DayOfWeakConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.SimpleListConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.TimeConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.WeekTypeConverter
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 
 @Entity(
     tableName = Constants.LESSONS_DATABASE,
-    //primaryKeys = ["weekType", "dayOfWeek", "beginTime", "endTime", Constants.GROUPS_COLUMN_NAME]
 )
 @TypeConverters(
     TimeConverter::class,
@@ -31,7 +31,9 @@ data class LessonDb(
     @PrimaryKey(autoGenerate = true)
     // возможно, можно обойтись и обычным val, но я не уверен
     var id: Id? = null,
+)
 
-    /*@Embedded
-    val baseLesson: BaseLessonDb,*/
+fun LessonDb.toGroupLesson() = GroupLesson(
+    info = this.info,
+    teachers = this.teachers,
 )

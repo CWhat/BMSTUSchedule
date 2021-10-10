@@ -9,13 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.theme.infoStyle
 
 @Composable
 fun MoreTab() {
-    val viewModel = viewModel<MoreViewModel>()
+    val viewModel = hiltViewModel<MoreViewModel>()
     val numberOfVisits by viewModel.numberOfVisits
 
     Column(modifier = Modifier.fillMaxSize()) {

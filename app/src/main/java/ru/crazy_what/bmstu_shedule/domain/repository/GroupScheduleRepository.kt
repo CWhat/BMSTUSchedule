@@ -1,5 +1,6 @@
 package ru.crazy_what.bmstu_shedule.domain.repository
 
+import ru.crazy_what.bmstu_shedule.common.Group
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 
 interface GroupScheduleRepository {
@@ -11,4 +12,6 @@ interface GroupScheduleRepository {
     suspend fun searchScheduleByGroupName(groupName: String): GroupSchedule
 
     suspend fun searchGroups(text: String): List<String>
+
+    suspend fun getAllGroupsName(): List<Group>
 }

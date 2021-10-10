@@ -3,7 +3,8 @@ package ru.crazy_what.bmstu_shedule.data.schedule
 import ru.crazy_what.bmstu_shedule.date.Date
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Month
-import ru.crazy_what.bmstu_shedule.domain.model.Lesson
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
+import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import java.util.*
 
@@ -11,7 +12,7 @@ import java.util.*
 // TODO начало семестра и количество дней и недель лучше передавать в конструктор
 class SchedulerImpl(
     private val groupName: String,
-    private val biweeklySchedule: BiweeklySchedule
+    private val groupSchedule: GroupSchedule,
 ) : Scheduler {
     private var currentDate = Calendar.getInstance()
 
@@ -36,7 +37,7 @@ class SchedulerImpl(
             }
         }
 
-    override fun studyDay(studyDayNum: Int): List<Lesson> {
+    override fun studyDay(studyDayNum: Int): List<GroupLesson> {
         if (studyDayNum < 1)
             error("Номер дня должен быть натуральным числом")
 
@@ -44,22 +45,23 @@ class SchedulerImpl(
             error("В этом семестре максимум $numberOfStudyDaysInSemester дней")
 
         val weekNum = studyDayNum / 6 + 1
-        val week = if (weekNum % 2 == 1)
-            biweeklySchedule.numerator
+        val weekType = if (weekNum % 2 == 1)
+            WeekType.NUMERATOR
         else
-            biweeklySchedule.denominator
+            WeekType.DENOMINATOR
 
-        val lessonList = when ((studyDayNum - 1) % 6) {
-            0 -> week.monday
-            1 -> week.tuesday
-            2 -> week.wednesday
-            3 -> week.thursday
-            4 -> week.friday
-            5 -> week.saturday
+        val dayOfWeek = when ((studyDayNum - 1) % 6) {
+            0 -> DayOfWeek.MONDAY
+            1 -> DayOfWeek.TUESDAY
+            2 -> DayOfWeek.WEDNESDAY
+            3 -> DayOfWeek.THURSDAY
+            4 -> DayOfWeek.FRIDAY
+            5 -> DayOfWeek.SATURDAY
             else -> error("Как такое возможно?")
         }
 
-        return lessonList.map { it.toLesson(listOf(groupName)) }
+        // TODO опасно
+        return groupSchedule.lessons[Pair(weekType, dayOfWeek)]!!
     }
 
     // TODO сделать проверку на границы
