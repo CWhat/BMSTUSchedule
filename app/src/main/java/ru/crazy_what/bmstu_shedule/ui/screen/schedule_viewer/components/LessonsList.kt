@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
+package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +20,7 @@ import ru.crazy_what.bmstu_shedule.date.Time
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
-import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.model.LessonWithInfo
+import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.model.LessonWithInfo
 import ru.crazy_what.bmstu_shedule.ui.sidePaddingOfCard
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 

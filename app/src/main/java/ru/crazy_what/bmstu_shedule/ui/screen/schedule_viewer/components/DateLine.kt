@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
+package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text

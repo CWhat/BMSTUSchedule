@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer.components
+package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,7 +17,6 @@ import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
-import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 import ru.crazy_what.bmstu_shedule.ui.cardCorner
 import ru.crazy_what.bmstu_shedule.ui.cardElevation

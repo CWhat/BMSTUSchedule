@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule.ui.schedule_viewer
+package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 

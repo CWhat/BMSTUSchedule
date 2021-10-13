@@ -5,15 +5,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.base_components.LoadView
 import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
-import ru.crazy_what.bmstu_shedule.ui.schedule_viewer.ScheduleViewer
+import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewer
+import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 
 @ExperimentalPagerApi
 @Composable
-fun MainTab(viewModel: MainViewModel = hiltViewModel()) {
+fun MainTab(viewModel: MainViewModel) {
     when (val state = viewModel.state.value) {
         is MainState.Loading -> {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -24,6 +27,7 @@ fun MainTab(viewModel: MainViewModel = hiltViewModel()) {
         is MainState.MainGroup -> {
             Column(modifier = Modifier.fillMaxSize()) {
                 SimpleBasicTopAppBar(title = state.groupName)
+                // TODO надо переделать
                 ScheduleViewer(groupName = state.groupName)
             }
         }
@@ -33,5 +37,14 @@ fun MainTab(viewModel: MainViewModel = hiltViewModel()) {
                 ErrorMessage(text = "Произошла ошибка: ${state.message}")
             }
         }
+    }
+}
+
+@ExperimentalPagerApi
+fun NavGraphBuilder.addMainTab() {
+    composable(
+        route = TabsConstants.ROUTE_MAIN_TAB,
+    ) { navBackStackEntry ->
+        MainTab(viewModel = hiltViewModel(navBackStackEntry))
     }
 }

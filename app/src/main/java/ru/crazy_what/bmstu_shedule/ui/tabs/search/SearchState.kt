@@ -6,6 +6,5 @@ sealed class SearchState {
     class ShowFaculties(val groups: List<String>) : SearchState()
     class ShowChairs(val groups: List<String>, val faculty: String) : SearchState()
     class ShowGroups(val groups: List<String>, val chair: String) : SearchState()
-    class ShowGroupSchedule(val groupName: String) : SearchState()
     // TODO
 }

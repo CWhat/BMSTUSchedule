@@ -17,6 +17,7 @@ data class Time(
 }
 
 // TODO стоит добавить проверку ошибок
+// TODO можно добавить проверку на количество символов (маскимум 5)
 fun String.toTime(delimiter: String = ":"): Time {
     val list = this.split(delimiter)
     return Time(list[0].toInt(), list[1].toInt())

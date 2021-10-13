@@ -42,8 +42,4 @@ class SearchViewModel @Inject constructor(
     fun showGroups(groups: List<String>, chair: String) {
         _state.value = SearchState.ShowGroups(groups, chair)
     }
-
-    fun showGroupSchedule(groupName: String) {
-        // TODO
-    }
 }

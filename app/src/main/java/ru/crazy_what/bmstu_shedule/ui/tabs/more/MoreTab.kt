@@ -10,13 +10,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
+import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 import ru.crazy_what.bmstu_shedule.ui.theme.infoStyle
 
 @Composable
-fun MoreTab() {
-    val viewModel = hiltViewModel<MoreViewModel>()
+fun MoreTab(
+    viewModel: MoreViewModel,
+) {
     val numberOfVisits by viewModel.numberOfVisits
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -32,6 +35,16 @@ fun MoreTab() {
                     Text(text = "Добавить")
                 }
             }
+        }
+    }
+}
+
+fun NavGraphBuilder.addMoreTab() {
+    composable(
+        route = TabsConstants.ROUTE_MORE_TAB,
+    ) { navBackStackEntry ->
+        Column(modifier = Modifier.fillMaxSize()) {
+            MoreTab(viewModel = hiltViewModel(navBackStackEntry))
         }
     }
 }
