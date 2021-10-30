@@ -35,6 +35,7 @@ fun BookmarksTab(
             }
             is BookmarksState.Bookmarks -> {
                 SimpleList(
+                    modifier = Modifier.fillMaxSize(),
                     items = state.groups,
                     onClickItem = { _, group -> clickOnGroups(group) },
                     placeholder = {

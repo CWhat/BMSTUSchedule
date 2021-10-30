@@ -22,6 +22,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.crazy_what.bmstu_shedule.ui.HollowStar
 import ru.crazy_what.bmstu_shedule.ui.base_components.SquareIcon
+import ru.crazy_what.bmstu_shedule.ui.screen.main.MainSections
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 
 @Composable
@@ -101,4 +102,36 @@ fun MainBottomNavItem(
                 MaterialTheme.colors.primary else Color.Gray
         )
     }
+}
+
+@Composable
+fun MainBottomBar(
+    tabs: Array<MainSections>,
+    currentRoute: String,
+    navigateToRoute: (String) -> Unit,
+) {
+    BottomAppBar(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            for (tab in tabs) {
+                IconButton(onClick = { navigateToRoute(tab.route) }) {
+                    SquareIcon(
+                        imageVector = tab.icon,
+                        // TODO исправить
+                        contentDescription = null,
+                        tint = if (tab.route == currentRoute)
+                        // TODO убрать хардкод цвета
+                            MaterialTheme.colors.primary else Color.Gray
+                    )
+                }
+            }
+        }
+    }
+
 }

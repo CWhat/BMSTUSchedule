@@ -78,6 +78,21 @@ enum class DateCircleState {
 
 @Composable
 fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
+    DateCircle(
+        dayOfMonth = date.dayOfMonth.toString(),
+        dayOfWeek = date.dayOfWeek.toShortString(),
+        state = state,
+        onClick = onClick,
+    )
+}
+
+@Composable
+fun DateCircle(
+    dayOfMonth: String,
+    dayOfWeek: String,
+    state: DateCircleState,
+    onClick: () -> Unit,
+) {
     // Определяем цвета
     val (backgroundColor, borderColor, textColor) = when (state) {
         DateCircleState.NONE -> Triple(
@@ -136,12 +151,12 @@ fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
         ) {
             CompositionLocalProvider(LocalContentColor provides textColor) {
                 Text(
-                    text = date.dayOfWeek.toShortString(),
+                    text = dayOfWeek,
                     textAlign = TextAlign.Center,
                     style = dateCircleStyle
                 )
                 Text(
-                    text = date.dayOfMonth.toString(),
+                    text = dayOfMonth,
                     textAlign = TextAlign.Center,
                     style = dateCircleStyle
                 )

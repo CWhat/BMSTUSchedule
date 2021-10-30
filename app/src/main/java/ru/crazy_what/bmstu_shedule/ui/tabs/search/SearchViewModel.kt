@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
             when (result) {
                 is Resource.Loading -> _state.value = SearchState.Loading
                 is Resource.Success -> result.data?.let {
-                    _state.value = SearchState.ShowFaculties(it)
+                    _state.value = SearchState.ShowGroups(it)
                 }
                 is Resource.Error -> result.message?.let { _state.value = SearchState.Error(it) }
             }
@@ -35,11 +35,4 @@ class SearchViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun showChairs(groups: List<String>, faculty: String) {
-        _state.value = SearchState.ShowChairs(groups, faculty)
-    }
-
-    fun showGroups(groups: List<String>, chair: String) {
-        _state.value = SearchState.ShowGroups(groups, chair)
-    }
 }
