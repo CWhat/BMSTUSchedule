@@ -8,12 +8,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.crazy_what.bmstu_shedule.common.Resource
+import ru.crazy_what.bmstu_shedule.domain.use_case.GetGroupSchedule
 import ru.crazy_what.bmstu_shedule.domain.use_case.GetMainGroup
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class MainTabViewModel @Inject constructor(
     private val getMainGroup: GetMainGroup,
+    private val getGroupSchedule: GetGroupSchedule,
 ) : ViewModel() {
 
     private val _state = mutableStateOf<MainState>(MainState.Loading)
@@ -26,11 +28,26 @@ class MainViewModel @Inject constructor(
     private fun loadMainGroupName() {
         getMainGroup().onEach { result ->
             when (result) {
-                is Resource.Success -> result.data?.let { _state.value = MainState.MainGroup(it) }
+                is Resource.Success -> result.data?.let { getSchedule(it) }
                 is Resource.Loading -> _state.value = MainState.Loading
                 is Resource.Error -> result.message?.let { _state.value = MainState.Error(it) }
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun getSchedule(group: String) {
+        getGroupSchedule(group).onEach { result ->
+            when (result) {
+                is Resource.Success -> result.data?.let {
+                    _state.value = MainState.MainGroup(group, result.data)
+                }
+                is Resource.Error -> result.message?.let {
+                    _state.value = MainState.Error(it)
+                }
+                is Resource.Loading -> _state.value = MainState.Loading
+            }
+        }.launchIn(viewModelScope)
+
     }
 
 }

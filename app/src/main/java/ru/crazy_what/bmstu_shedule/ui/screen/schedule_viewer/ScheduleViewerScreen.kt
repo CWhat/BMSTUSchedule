@@ -26,7 +26,7 @@ fun ScheduleViewerScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         SimpleBasicTopAppBar(title = groupName)
-        ScheduleViewer(groupName)
+        ScheduleViewer(scheduleViewerState = viewModel.state.value)
     }
 }
 

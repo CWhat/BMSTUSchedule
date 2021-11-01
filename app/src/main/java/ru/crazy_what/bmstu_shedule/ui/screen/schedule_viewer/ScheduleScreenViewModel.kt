@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScheduleScreenViewModel @Inject constructor(
+    private val getGroupSchedule: GetGroupSchedule,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -35,10 +36,27 @@ class ScheduleScreenViewModel @Inject constructor(
     init {
         savedStateHandle.get<String>(Constants.PARAM_GROUP_NAME)
             ?.let { groupName -> _groupName.value = groupName }
+
+        getSchedule(groupName.value)
     }
 
     fun addBookmark() {
         // TODO добавляем в закладки
         _isBookmark.value = !_isBookmark.value
+    }
+
+    private fun getSchedule(group: String) {
+        getGroupSchedule(group).onEach { result ->
+            when (result) {
+                is Resource.Success -> result.data?.let {
+                    _state.value = ScheduleViewerState.Schedule(result.data)
+                }
+                is Resource.Error -> result.message?.let {
+                    _state.value = ScheduleViewerState.Error(it)
+                }
+                is Resource.Loading -> _state.value = ScheduleViewerState.Loading
+            }
+        }.launchIn(viewModelScope)
+
     }
 }

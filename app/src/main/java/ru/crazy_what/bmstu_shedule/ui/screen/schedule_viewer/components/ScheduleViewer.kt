@@ -37,53 +37,20 @@ import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
 @ExperimentalPagerApi
 @Composable
-fun ScheduleViewer(viewModel: ScheduleViewerViewModel = hiltViewModel()) {
-    val state = viewModel.state.value
-
+fun ScheduleViewer(scheduleViewerState: ScheduleViewerState) {
     Column(modifier = Modifier.fillMaxSize()) {
-        when (state) {
+        when (scheduleViewerState) {
             is ScheduleViewerState.Loading -> LoadView()
-            // TODO поменять
             is ScheduleViewerState.Schedule ->
-                // TODO добавить добавление в закладки
-                GroupScheduleViewer(groupScheduler = state.scheduler)
+                GroupScheduleViewer(groupScheduler = scheduleViewerState.scheduler)
             // TODO добавить красивый диалог с ошибкой
             is ScheduleViewerState.Error -> ErrorMessage(
-                text = "При загрузке расписания произошла ошибка: ${state.message}",
+                text = "При загрузке расписания произошла ошибка: ${scheduleViewerState.message}",
                 modifier = Modifier
                     .padding(24.dp)
                     .align(Alignment.CenterHorizontally)
             )
         }
-    }
-}
-
-@ExperimentalPagerApi
-fun NavGraphBuilder.addScheduleViewer(defaultGroup: String? = null) {
-    composable(
-        route = "${Constants.ROUTE_SCHEDULE_VIEWER}/{${Constants.PARAM_GROUP_NAME}}",
-        arguments = listOf(navArgument(name = Constants.PARAM_GROUP_NAME) {
-            type = NavType.StringType
-            defaultGroup?.let {
-                defaultValue = it
-            }
-        })
-    ) { navBackStackEntry ->
-        ScheduleViewer(viewModel = hiltViewModel(navBackStackEntry))
-    }
-}
-
-// TODO костыль
-@ExperimentalPagerApi
-@Composable
-fun ScheduleViewer(groupName: String) {
-    val navController = rememberNavController()
-    navController.enableOnBackPressed(false)
-    NavHost(
-        navController = navController,
-        startDestination = "${Constants.ROUTE_SCHEDULE_VIEWER}/{${Constants.PARAM_GROUP_NAME}}",
-    ) {
-        addScheduleViewer(groupName)
     }
 }
 
@@ -134,53 +101,4 @@ fun GroupScheduleViewer(groupScheduler: GroupScheduler) {
         date = groupScheduler::getDate,
         daySchedule = groupScheduler::getSchedule,
     )
-}
-
-@ExperimentalPagerApi
-@Preview(showBackground = true)
-@Composable
-fun BaseScheduleViewerPrev() {
-    BMSTUScheduleTheme {
-        BaseScheduleViewer(
-            countDay = 6,
-            initDay = 0,
-            currentDay = 3,
-            weekInfo = {
-                "1 неделя, числитель"
-            },
-            date = { dayNum ->
-                when (dayNum) {
-                    0 -> Date(2021, Month.SEPTEMBER, DayOfWeek.MONDAY, 1)
-                    1 -> Date(2021, Month.SEPTEMBER, DayOfWeek.TUESDAY, 2)
-                    2 -> Date(2021, Month.SEPTEMBER, DayOfWeek.WEDNESDAY, 3)
-                    3 -> Date(2021, Month.SEPTEMBER, DayOfWeek.THURSDAY, 4)
-                    4 -> Date(2021, Month.SEPTEMBER, DayOfWeek.FRIDAY, 5)
-                    else -> Date(2021, Month.SEPTEMBER, DayOfWeek.SUNDAY, 6)
-                }
-            },
-            daySchedule = { dayNum ->
-                flow {
-                    emit(
-                        LessonsListState.Lessons(
-                            listOf(
-                                LessonWithInfo(
-                                    GroupLesson(
-                                        LessonInfo(
-                                            WeekType.NUMERATOR,
-                                            DayOfWeek.MONDAY,
-                                            Time(8, 30),
-                                            Time(9, 5),
-                                            "сем",
-                                            "${dayNum + 1}. Кратные интегралы и ряды",
-                                            "544л"
-                                        ), listOf()
-                                    )
-                                )
-                            )
-                        )
-                    )
-                }
-            }
-        )
-    }
 }

@@ -11,12 +11,13 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.base_components.LoadView
 import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
+import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.GroupScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 
 @ExperimentalPagerApi
 @Composable
-fun MainTab(viewModel: MainViewModel) {
+fun MainTab(viewModel: MainTabViewModel) {
     when (val state = viewModel.state.value) {
         is MainState.Loading -> {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -27,8 +28,7 @@ fun MainTab(viewModel: MainViewModel) {
         is MainState.MainGroup -> {
             Column(modifier = Modifier.fillMaxSize()) {
                 SimpleBasicTopAppBar(title = state.groupName)
-                // TODO надо переделать
-                ScheduleViewer(groupName = state.groupName)
+                GroupScheduleViewer(groupScheduler = state.groupScheduler)
             }
         }
         is MainState.Error -> {
