@@ -24,6 +24,7 @@ interface LessonsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addLessonEntity(lesson: LessonDb): Id
 
+    // TODO надо усложнить, скорее всего, работает криво
     @Query(
         "SELECT * FROM ${Constants.LESSONS_DATABASE} " +
                 "WHERE ${Constants.GROUPS_COLUMN_NAME} LIKE '%' || :groupName || '%'"

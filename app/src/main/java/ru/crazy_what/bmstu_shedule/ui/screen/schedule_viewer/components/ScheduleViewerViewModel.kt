@@ -44,18 +44,4 @@ class ScheduleViewerViewModel @Inject constructor(
         }.launchIn(viewModelScope)
 
     }
-
-    fun getLessonsList(numDay: Int): Flow<LessonsListState> = flow {
-        emit(LessonsListState.Loading)
-        if (_state.value is ScheduleViewerState.Schedule) {
-            val lessonsWithInfo =
-                (_state.value as ScheduleViewerState.Schedule).scheduler.studyDay(numDay + 1)
-                    .map {
-                        LessonWithInfo(
-                            lesson = it
-                        )
-                    }
-            emit(LessonsListState.Lessons(lessonsWithInfo))
-        } else emit(LessonsListState.Error("Произошла непредвиденная ошибка"))
-    }
 }

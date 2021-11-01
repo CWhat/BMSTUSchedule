@@ -3,12 +3,12 @@ package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -18,71 +18,22 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.data.schedule.StudyDayInfo
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekInfo
+import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.Date
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
+import ru.crazy_what.bmstu_shedule.date.Month
+import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
+import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
+import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduler
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.base_components.LoadView
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.ScheduleViewerScreen
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewerState
-
-@ExperimentalPagerApi
-@Composable
-fun ScheduleViewer(
-    getLessonsList: (numDay: Int) -> Flow<LessonsListState>,
-    // TODO возможно, надо тоже заменить на Flow
-    getWeekInfo: (numWeek: Int) -> WeekInfo,
-    // TODO возможно, надо тоже заменить на Flow
-    getDayInfo: (numDay: Int) -> StudyDayInfo,
-    isToday: (numDay: Int) -> Boolean,
-    numberOfDays: Int,
-    initialWeek: Int,
-    initialDay: Int,
-    daysInWeek: Int = 6,
-    // функция, определяющую какой неделе принадлежит день из аргумента
-    isWeek: (numDay: Int) -> Int = { numDay ->
-        numDay / daysInWeek
-    },
-) {
-    val numberOfWeeks = numberOfDays / daysInWeek + if (numberOfDays % daysInWeek != 0) 1 else 0
-    val weeksState = rememberPagerState(pageCount = numberOfWeeks, initialPage = initialWeek)
-
-    val lessonsState = rememberPagerState(pageCount = numberOfDays, initialPage = initialDay)
-
-    // scope для анимации прокручивания списка
-    val scope = rememberCoroutineScope()
-
-    // при изменении lessonsState меняем weeksState
-    LaunchedEffect(lessonsState) {
-        snapshotFlow { lessonsState.currentPage }.collect { page ->
-            scope.launch {
-                weeksState.animateScrollToPage(isWeek(page))
-            }
-        }
-    }
-
-    DateLine(
-        weeksState = weeksState,
-        lessonsState = lessonsState,
-        onClick = { dayInfo ->
-            scope.launch {
-                lessonsState.animateScrollToPage(dayInfo.studyDayNum)
-            }
-        },
-        getWeekInfo = getWeekInfo,
-        getDayInfo = getDayInfo,
-        isToday = isToday
-    )
-
-    // список занятий
-    HorizontalPager(state = lessonsState) { page -> LessonsList(getLessonsList(page)) }
-
-}
+import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.model.LessonWithInfo
+import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
+import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 
 @ExperimentalPagerApi
 @Composable
@@ -94,21 +45,8 @@ fun ScheduleViewer(viewModel: ScheduleViewerViewModel = hiltViewModel()) {
             is ScheduleViewerState.Loading -> LoadView()
             // TODO поменять
             is ScheduleViewerState.Schedule ->
-                with(state.scheduler) {
-                    // TODO добавить добавление в закладки
-                    ScheduleViewer(
-                        getLessonsList = { numDay -> viewModel.getLessonsList(numDay) },
-                        getWeekInfo = { weekNum -> studyWeekInfo(weekNum + 1) },
-                        getDayInfo = { dayNum ->
-                            val info = studyDayInfo(dayNum)
-                            StudyDayInfo(date = info.date, studyDayNum = info.studyDayNum - 1)
-                        },
-                        isToday = { dayNum -> dayNum + 1 == currentDay },
-                        numberOfDays = numberOfStudyDaysInSemester,
-                        initialWeek = currentWeek?.minus(1) ?: 0,
-                        initialDay = currentDay?.minus(1) ?: 0,
-                    )
-                }
+                // TODO добавить добавление в закладки
+                GroupScheduleViewer(groupScheduler = state.scheduler)
             // TODO добавить красивый диалог с ошибкой
             is ScheduleViewerState.Error -> ErrorMessage(
                 text = "При загрузке расписания произошла ошибка: ${state.message}",
@@ -146,5 +84,103 @@ fun ScheduleViewer(groupName: String) {
         startDestination = "${Constants.ROUTE_SCHEDULE_VIEWER}/{${Constants.PARAM_GROUP_NAME}}",
     ) {
         addScheduleViewer(groupName)
+    }
+}
+
+@ExperimentalPagerApi
+@Composable
+fun BaseScheduleViewer(
+    countDay: Int,
+    initDay: Int,
+    currentDay: Int?,
+    weekInfo: (weekNum: Int) -> String,
+    date: (dayNum: Int) -> Date,
+    daySchedule: (dayNum: Int) -> Flow<LessonsListState>,
+) {
+    PageTabs(
+        modifier = Modifier.fillMaxSize(),
+        initElement = initDay,
+        countElements = countDay,
+        tabsPageInfo = { weekNum: Int ->
+            Text(
+                text = weekInfo(weekNum),
+                textAlign = TextAlign.Center,
+                style = littleTitleStyle,
+            )
+        },
+        tabLayout = { dayNum, offset ->
+            val date = date(dayNum)
+            // TODO переделать с нормальным использованием offset
+            val state =
+                if (offset == 0F && dayNum == currentDay) DateCircleState.CURRENT
+                else if (offset == 1F) DateCircleState.SELECT
+                else DateCircleState.NONE
+
+            DateCircle(date = date, state = state)
+        },
+    ) { dayNum ->
+        LessonsList(lessonsListState = daySchedule(dayNum))
+    }
+}
+
+@ExperimentalPagerApi
+@Composable
+fun GroupScheduleViewer(groupScheduler: GroupScheduler) {
+    BaseScheduleViewer(
+        countDay = groupScheduler.numberOfStudyDaysInSemester,
+        initDay = groupScheduler.initDay,
+        currentDay = groupScheduler.currentDay,
+        weekInfo = groupScheduler::weekInfo,
+        date = groupScheduler::getDate,
+        daySchedule = groupScheduler::getSchedule,
+    )
+}
+
+@ExperimentalPagerApi
+@Preview(showBackground = true)
+@Composable
+fun BaseScheduleViewerPrev() {
+    BMSTUScheduleTheme {
+        BaseScheduleViewer(
+            countDay = 6,
+            initDay = 0,
+            currentDay = 3,
+            weekInfo = {
+                "1 неделя, числитель"
+            },
+            date = { dayNum ->
+                when (dayNum) {
+                    0 -> Date(2021, Month.SEPTEMBER, DayOfWeek.MONDAY, 1)
+                    1 -> Date(2021, Month.SEPTEMBER, DayOfWeek.TUESDAY, 2)
+                    2 -> Date(2021, Month.SEPTEMBER, DayOfWeek.WEDNESDAY, 3)
+                    3 -> Date(2021, Month.SEPTEMBER, DayOfWeek.THURSDAY, 4)
+                    4 -> Date(2021, Month.SEPTEMBER, DayOfWeek.FRIDAY, 5)
+                    else -> Date(2021, Month.SEPTEMBER, DayOfWeek.SUNDAY, 6)
+                }
+            },
+            daySchedule = { dayNum ->
+                flow {
+                    emit(
+                        LessonsListState.Lessons(
+                            listOf(
+                                LessonWithInfo(
+                                    GroupLesson(
+                                        LessonInfo(
+                                            WeekType.NUMERATOR,
+                                            DayOfWeek.MONDAY,
+                                            Time(8, 30),
+                                            Time(9, 5),
+                                            "сем",
+                                            "${dayNum + 1}. Кратные интегралы и ряды",
+                                            "544л"
+                                        ), listOf()
+                                    )
+                                )
+                            )
+                        )
+                    )
+                }
+            }
+        )
     }
 }

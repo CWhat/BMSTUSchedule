@@ -1,6 +1,5 @@
 package ru.crazy_what.bmstu_shedule.domain.repository
 
-import ru.crazy_what.bmstu_shedule.domain.model.Lesson
 import ru.crazy_what.bmstu_shedule.data.schedule.StudyDayInfo
 import ru.crazy_what.bmstu_shedule.data.schedule.WeekInfo
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson

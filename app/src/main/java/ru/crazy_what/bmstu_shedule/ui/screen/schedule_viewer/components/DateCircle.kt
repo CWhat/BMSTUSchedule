@@ -77,12 +77,11 @@ enum class DateCircleState {
 }
 
 @Composable
-fun DateCircle(date: Date, state: DateCircleState, onClick: () -> Unit = {}) {
+fun DateCircle(date: Date, state: DateCircleState) {
     DateCircle(
         dayOfMonth = date.dayOfMonth.toString(),
         dayOfWeek = date.dayOfWeek.toShortString(),
         state = state,
-        onClick = onClick,
     )
 }
 
@@ -91,7 +90,6 @@ fun DateCircle(
     dayOfMonth: String,
     dayOfWeek: String,
     state: DateCircleState,
-    onClick: () -> Unit,
 ) {
     // Определяем цвета
     val (backgroundColor, borderColor, textColor) = when (state) {
@@ -116,12 +114,6 @@ fun DateCircle(
         modifier = Modifier
             .border(width = 1.dp, borderColor, shape = CircleShape)
             .background(color = backgroundColor, shape = CircleShape)
-            // Убираем подсветку при удерживании
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
             .layout { measurable, constraints ->
                 // Measure the composable
                 val placeable = measurable.measure(constraints)
