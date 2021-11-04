@@ -1,4 +1,4 @@
-package ru.crazy_what.bmstu_shedule
+package ru.crazy_what.bmstu_shedule.ui.activities.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,7 +13,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
+import ru.crazy_what.bmstu_shedule.rememberAppState
 import ru.crazy_what.bmstu_shedule.ui.screen.ScreensConstants
+import ru.crazy_what.bmstu_shedule.ui.screen.load_schedule.addLoadScheduleScreen
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.addScheduleScreen
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 import ru.crazy_what.bmstu_shedule.ui.tabs.components.MainBottomBar
@@ -26,6 +28,8 @@ class MainActivity : ComponentActivity() {
     @ExperimentalPagerApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // TODO здесь мы должны сначала проверять загружено ли расписание и выбрана ли основная группа
 
         setContent {
             BMSTUScheduleTheme {
@@ -41,7 +45,9 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .weight(1F),
                             navController = appState.navController,
-                            startDestination = ScreensConstants.ROUTE_MAIN_SCREEN
+                            // TODO выбирать в зависимости от того, скачано ли расписание и выбрана ли основная группа
+                            //startDestination = ScreensConstants.ROUTE_MAIN_SCREEN,
+                            startDestination = ScreensConstants.ROUTE_LOAD_SCHEDULE,
                         ) {
                             navigation(
                                 startDestination = TabsConstants.ROUTE_MAIN_TAB,
@@ -54,6 +60,9 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             addScheduleScreen()
+                            addLoadScheduleScreen {
+                                appState.navigateToMainScreen()
+                            }
                         }
                         if (appState.shouldShowBottomBar) {
                             MainBottomBar(

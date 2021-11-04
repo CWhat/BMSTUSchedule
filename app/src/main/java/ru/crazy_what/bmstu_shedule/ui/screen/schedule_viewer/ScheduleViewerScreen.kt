@@ -2,6 +2,9 @@ package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,7 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
+import ru.crazy_what.bmstu_shedule.ui.HollowStar
+import ru.crazy_what.bmstu_shedule.ui.base_components.BasicTopAppBarVector
 import ru.crazy_what.bmstu_shedule.ui.screen.ScreensConstants
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewer
 
@@ -25,7 +29,13 @@ fun ScheduleViewerScreen(
     val isBookmark = viewModel.isBookmarks.value
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SimpleBasicTopAppBar(title = groupName)
+        BasicTopAppBarVector(
+            title = groupName,
+            leftIcon = Icons.Filled.ArrowBack,
+            byLeftClick = { /* TODO возвращаться назад */ },
+            rightIcon = if (isBookmark) Icons.Filled.Star else HollowStar,
+            byRightClick = { viewModel.addBookmark() },
+        )
         ScheduleViewer(scheduleViewerState = viewModel.state.value)
     }
 }

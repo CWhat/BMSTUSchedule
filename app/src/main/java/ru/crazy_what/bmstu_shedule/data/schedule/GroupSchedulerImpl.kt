@@ -33,8 +33,8 @@ class GroupSchedulerImpl(
             }
             if (between < 0) return 0
 
-            val weekNum = between / 7 + 1
-            return (between + 1) - (weekNum - 1)
+            val weekNum = between / 7
+            return between - weekNum
         }
     override val currentDay: Int?
         get() {
@@ -44,8 +44,8 @@ class GroupSchedulerImpl(
                 val between = getTimeBetween(startSemester, currentDate)
                 if (between < 0) return null
 
-                val weekNum = between / 7 + 1
-                return (between + 1) - (weekNum - 1)
+                val weekNum = between / 7
+                return between - weekNum
             }
         }
 

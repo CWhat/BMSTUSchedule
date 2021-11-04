@@ -7,7 +7,7 @@ import androidx.compose.ui.text.style.TextAlign
 
 // TODO сделать красивым
 @Composable
-fun ErrorMessage(text: String, modifier: Modifier = Modifier) {
+fun InfoMessage(text: String, modifier: Modifier = Modifier) {
     // TODO выбрать размер шрифта
     Text(
         text = text,

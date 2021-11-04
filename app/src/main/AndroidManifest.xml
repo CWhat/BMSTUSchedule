@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BMSTUSchedule">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="sensorPortrait"

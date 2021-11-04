@@ -8,7 +8,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.*
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
@@ -70,8 +73,23 @@ class AppState(
     }
 
     // TODO сделать, как в Jetsnack с передачей NavBackStackEntry
+    fun navigateToMainScreen() {
+        navController.navigate(ScreensConstants.ROUTE_MAIN_SCREEN) {
+            // должно очищать весь стек
+            popUpTo(findStartDestination(navController.graph).id) {
+                inclusive = true
+            }
+        }
+    }
+
+    // TODO сделать, как в Jetsnack с передачей NavBackStackEntry
     fun navigateToScheduleViewer(group: String) {
         navController.navigate("${ScreensConstants.ROUTE_SCHEDULE_SCREEN}/$group")
+    }
+
+    // TODO сделать, как в Jetsnack с передачей NavBackStackEntry
+    fun navigateToLoadSchedule() {
+        navController.navigate(ScreensConstants.ROUTE_LOAD_SCHEDULE)
     }
 
 }

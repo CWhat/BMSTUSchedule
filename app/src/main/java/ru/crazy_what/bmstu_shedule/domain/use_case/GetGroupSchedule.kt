@@ -4,10 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
 import ru.crazy_what.bmstu_shedule.data.schedule.GroupSchedulerImpl
-import ru.crazy_what.bmstu_shedule.data.schedule.SchedulerImpl
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduler
-import ru.crazy_what.bmstu_shedule.domain.repository.Scheduler
 import javax.inject.Inject
 
 // старый вариант без использования базы данных, вдруг пригодится

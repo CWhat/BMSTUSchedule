@@ -40,6 +40,7 @@ class ScheduleScreenViewModel @Inject constructor(
         getSchedule(groupName.value)
     }
 
+    // TODO стоит переименовать
     fun addBookmark() {
         // TODO добавляем в закладки
         _isBookmark.value = !_isBookmark.value
