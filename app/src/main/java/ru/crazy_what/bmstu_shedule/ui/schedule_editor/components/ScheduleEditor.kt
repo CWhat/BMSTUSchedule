@@ -2,6 +2,7 @@ package ru.crazy_what.bmstu_shedule.ui.schedule_editor.components
 
 import androidx.compose.runtime.Composable
 
+// TODO сделать (мб когда-нибудь потом)
 data class LessonSource(
     var timeStart: String,
     var timeEnd: String,

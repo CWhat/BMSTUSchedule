@@ -3,6 +3,7 @@ package ru.crazy_what.bmstu_shedule.domain.model
 import ru.crazy_what.bmstu_shedule.common.Group
 import ru.crazy_what.bmstu_shedule.date.Time
 
+// TODO использовать в расписании это
 data class Lesson(
     val beginTime: Time,
     val endTime: Time,

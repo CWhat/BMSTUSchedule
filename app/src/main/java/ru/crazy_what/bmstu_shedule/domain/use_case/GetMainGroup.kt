@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
 import javax.inject.Inject
 
+// TODO возможно, этот UseCase должен возвращать не имя группы, а расписание
 // Возвращает название основной группы
 class GetMainGroup @Inject constructor(){
 

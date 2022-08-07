@@ -2,6 +2,7 @@ package ru.crazy_what.bmstu_shedule.data.db.converters
 
 import androidx.room.TypeConverter
 
+// TODO переделать (заключать каждый элемент, например, в квадратные скобки [])
 class SimpleListConverter {
 
     @TypeConverter

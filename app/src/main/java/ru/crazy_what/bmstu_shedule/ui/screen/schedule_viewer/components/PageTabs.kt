@@ -26,7 +26,7 @@ fun PageTabs(
     // offset:
     // 0.F - это текущая страница
     // (0.F, 1.F) - идет перелистывание с этой страницы или на эту
-    // 1.F - эта страница полностью видна
+    // 1.F - эта страница полностью видна (?)
     tabLayout: @Composable (elementId: Int, offset: Float) -> Unit,
     hostLayout: @Composable (elementId: Int) -> Unit,
 ) {
