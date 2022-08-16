@@ -12,7 +12,6 @@ import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.base_components.LoadView
 import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.GroupScheduleViewer
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewer
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 
 @ExperimentalPagerApi

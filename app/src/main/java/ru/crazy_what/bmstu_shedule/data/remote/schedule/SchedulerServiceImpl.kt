@@ -1,12 +1,11 @@
 package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.data.schedule.*
+import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.toTime
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson

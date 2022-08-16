@@ -18,6 +18,7 @@ import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLessonWithInfo
 import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.model.LessonWithInfo
@@ -81,6 +82,32 @@ fun LessonsListPrev() {
 }
 
 @Composable
+fun NewLessonsList(
+    lessonsWithInfo: List<GroupLessonWithInfo>,
+) {
+    // TODO можно показывать картинку, если список пустой
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(lessonsWithInfo) { lessonWithInfo ->
+            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                with(lessonWithInfo) {
+                    LessonCard(
+                        beginTime = begin,
+                        endTime = end,
+                        name = name,
+                        cabinet = cabinet ?: "",
+                        teacher = teacher ?: "",
+                        type = type ?: "",
+                        timeProgress = timeProgress,
+                        messageFromAbove = messageFromAbove,
+                        messageBelow = messageBelow,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun LessonsList(
     lessonsWithInfo: List<LessonWithInfo>,
 ) {
@@ -120,4 +147,42 @@ fun LessonsList(lessonsListState: Flow<LessonsListState>) {
         }
     }
 
+}
+
+@Composable
+fun LessonsList(state: LessonsListState) {
+    when (state) {
+        is LessonsListState.Loading -> {
+            // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
+            // с этим надо что-то делать
+            //CircularProgressIndicator()
+        }
+        is LessonsListState.Error -> ErrorMessage(text = state.message)
+        is LessonsListState.Lessons -> {
+            LessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
+                val beginTime = it.lesson.info.beginTime
+                return@sortedBy beginTime.hours * 60 + beginTime.minutes
+            })
+        }
+    }
+}
+
+@Composable
+fun LessonsList(
+    state: GroupLessonsListState,
+) {
+    when (state) {
+        is GroupLessonsListState.Loading -> {
+            // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
+            // с этим надо что-то делать
+            //CircularProgressIndicator()
+        }
+        is GroupLessonsListState.Error -> ErrorMessage(text = state.message)
+        is GroupLessonsListState.Lessons -> {
+            NewLessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
+                val beginTime = it.begin
+                return@sortedBy beginTime.hours * 60 + beginTime.minutes
+            })
+        }
+    }
 }

@@ -91,6 +91,33 @@ fun LessonCard(
     messageFromAbove: String? = null,
     messageBelow: String? = null,
 ) {
+    val teachers = lesson.teachers.joinToString(separator = ", ")
+
+    LessonCard(
+        beginTime = lesson.info.beginTime,
+        endTime = lesson.info.endTime,
+        name = lesson.info.name,
+        cabinet = lesson.info.cabinet,
+        teacher = teachers,
+        type = lesson.info.type,
+        timeProgress = timeProgress,
+        messageFromAbove = messageFromAbove,
+        messageBelow = messageBelow,
+    )
+}
+
+@Composable
+fun LessonCard(
+    beginTime: Time,
+    endTime: Time,
+    name: String,
+    cabinet: String,
+    teacher: String,
+    type: String,
+    timeProgress: Float? = null,
+    messageFromAbove: String? = null,
+    messageBelow: String? = null,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -117,13 +144,13 @@ fun LessonCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = "${lesson.info.beginTime}-${lesson.info.endTime}" +
-                            if (lesson.info.type.isNotEmpty()) ", ${lesson.info.type}" else "",
+                    text = "$beginTime-$endTime" +
+                            if (type.isNotEmpty()) ", $type" else "",
                     style = infoStyle,
                 )
                 // TODO сюда можно добавить иконку Icons.Default.Place
                 Text(
-                    text = if (lesson.info.cabinet.isNotEmpty()) "каб.: ${lesson.info.cabinet}" else "",
+                    text = if (cabinet.isNotEmpty()) "каб.: $cabinet" else "",
                     style = infoStyle,
                 )
             }
@@ -153,13 +180,12 @@ fun LessonCard(
 
             Text(
                 modifier = Modifier.padding(16.dp, 0.dp),
-                text = lesson.info.name,
+                text = name,
                 style = titleStyle,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            val teachers = lesson.teachers.joinToString(separator = ", ")
-            if (teachers.isNotBlank()) {
+            if (teacher.isNotBlank()) {
                 Text(
                     modifier = Modifier.padding(
                         start = 16.dp,
@@ -168,7 +194,7 @@ fun LessonCard(
                         bottom = 4.dp,
                     ),
                     style = teacherStyle,
-                    text = teachers,
+                    text = teacher,
                 )
             } else {
                 CompositionLocalProvider(LocalContentColor provides Color.Gray) {

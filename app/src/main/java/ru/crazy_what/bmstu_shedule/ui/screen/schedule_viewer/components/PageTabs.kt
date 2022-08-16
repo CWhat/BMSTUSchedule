@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -34,11 +33,12 @@ fun PageTabs(
         pageNum / countElementsInPage
     }
 
+    val tabsCount =
+        (countElements / countElementsInPage) + if (countElements % countElementsInPage != 0) 1 else 0
     val tabsState = rememberPagerState(
-        pageCount = (countElements / countElementsInPage) + if (countElements % countElementsInPage != 0) 1 else 0,
         initialPage = isPage(initElement),
     )
-    val elementsState = rememberPagerState(pageCount = countElements, initialPage = initElement)
+    val elementsState = rememberPagerState(initialPage = initElement)
     val coroutineScope = rememberCoroutineScope()
     val currentElementPage =
         remember(elementsState.currentPage) { elementsState.currentPage }
@@ -54,7 +54,11 @@ fun PageTabs(
     }
 
     Column(modifier = modifier) {
-        HorizontalPager(modifier = Modifier.fillMaxWidth(), state = tabsState) { page: Int ->
+        HorizontalPager(
+            modifier = Modifier.fillMaxWidth(),
+            state = tabsState,
+            count = tabsCount,
+        ) { page: Int ->
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
                 Box(
                     modifier = Modifier
@@ -105,6 +109,7 @@ fun PageTabs(
         }
 
         HorizontalPager(
+            count = countElements,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1F), state = elementsState
