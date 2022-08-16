@@ -6,16 +6,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.common.Resource
 import ru.crazy_what.bmstu_shedule.domain.use_case.GetGroupSchedule
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.ScheduleViewerState
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.LessonsListState
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.model.LessonWithInfo
 import javax.inject.Inject
 
 @HiltViewModel

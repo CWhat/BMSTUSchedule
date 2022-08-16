@@ -10,7 +10,7 @@ import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 
 enum class MainSections(
     val icon: ImageVector,
-    val route: String
+    val route: String,
 ) {
     MAIN(Icons.Filled.Home, TabsConstants.ROUTE_MAIN_TAB),
     BOOKMARKS(HollowStar, TabsConstants.ROUTE_BOOKMARKS_TAB),

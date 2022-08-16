@@ -18,9 +18,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import ru.crazy_what.bmstu_shedule.date.Date
-import ru.crazy_what.bmstu_shedule.date.DayOfWeek
-import ru.crazy_what.bmstu_shedule.date.Month
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 import ru.crazy_what.bmstu_shedule.ui.theme.dateCircleStyle
 import kotlin.math.max
@@ -34,121 +31,58 @@ fun DateCirclePrev() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            fakeData.forEach { date ->
-                Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
-                    DateCircle(date = date.first, state = date.second)
-                }
-            }
-        }
-    }
-}
-
-private val fakeData = listOf(
-    Pair(
-        Date(year = 2021, month = Month.AUGUST, dayOfWeek = DayOfWeek.MONDAY, dayOfMonth = 30),
-        DateCircleState.NONE
-    ),
-    Pair(
-        Date(year = 2021, month = Month.AUGUST, dayOfWeek = DayOfWeek.TUESDAY, dayOfMonth = 31),
-        DateCircleState.NONE
-    ),
-    Pair(
-        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.WEDNESDAY, dayOfMonth = 1),
-        DateCircleState.CURRENT
-    ),
-    Pair(
-        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.THURSDAY, dayOfMonth = 2),
-        DateCircleState.NONE
-    ),
-    Pair(
-        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.FRIDAY, dayOfMonth = 3),
-        DateCircleState.SELECT
-    ),
-    Pair(
-        Date(year = 2021, month = Month.SEPTEMBER, dayOfWeek = DayOfWeek.SATURDAY, dayOfMonth = 4),
-        DateCircleState.NONE
-    )
-)
-
-enum class DateCircleState {
-    SELECT, CURRENT, NONE
-}
-
-@Composable
-fun DateCircle(date: Date, state: DateCircleState) {
-    DateCircle(
-        dayOfMonth = date.dayOfMonth.toString(),
-        dayOfWeek = date.dayOfWeek.toShortString(),
-        state = state,
-    )
-}
-
-@Composable
-fun DateCircle(
-    dayOfMonth: String,
-    dayOfWeek: String,
-    state: DateCircleState,
-) {
-    // Определяем цвета
-    val (backgroundColor, borderColor, textColor) = when (state) {
-        DateCircleState.NONE -> Triple(
-            MaterialTheme.colors.surface, // цвет фона
-            Color.Gray, // цвет ободка // TODO убрать хардкод
-            MaterialTheme.colors.onSurface // цвет текста
-        )
-        DateCircleState.CURRENT -> Triple(
-            MaterialTheme.colors.surface,
-            MaterialTheme.colors.primary,
-            MaterialTheme.colors.primary
-        )
-        DateCircleState.SELECT -> Triple(
-            MaterialTheme.colors.primary,
-            MaterialTheme.colors.primary,
-            MaterialTheme.colors.onPrimary
-        )
-    }
-
-    Box(
-        modifier = Modifier
-            .border(width = 1.dp, borderColor, shape = CircleShape)
-            .background(color = backgroundColor, shape = CircleShape)
-            .layout { measurable, constraints ->
-                // Measure the composable
-                val placeable = measurable.measure(constraints)
-
-                //get the current max dimension to assign width=height
-                val currentHeight = placeable.height
-                val currentWidth = placeable.width
-
-                val heightCircle = max(currentHeight, currentWidth)
-
-                //assign the dimension and the center position
-                layout(heightCircle, heightCircle) {
-                    // Where the composable gets placed
-                    placeable.placeRelative(
-                        (heightCircle - currentWidth) / 2,
-                        (heightCircle - currentHeight) / 2
-                    )
-                }
-            }, contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(4.dp)
-                .defaultMinSize(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CompositionLocalProvider(LocalContentColor provides textColor) {
-                Text(
-                    text = dayOfWeek,
-                    textAlign = TextAlign.Center,
-                    style = dateCircleStyle
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "30",
+                    dayOfWeek = "ПН",
+                    fraction = 0f,
+                    isCurrent = false,
+                    isNotActive = false,
                 )
-                Text(
-                    text = dayOfMonth,
-                    textAlign = TextAlign.Center,
-                    style = dateCircleStyle
+            }
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "31",
+                    dayOfWeek = "ВТ",
+                    fraction = 0f,
+                    isCurrent = false,
+                    isNotActive = false,
+                )
+            }
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "1",
+                    dayOfWeek = "СР",
+                    fraction = 0f,
+                    isCurrent = true,
+                    isNotActive = false,
+                )
+            }
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "2",
+                    dayOfWeek = "ЧТ",
+                    fraction = 0f,
+                    isCurrent = false,
+                    isNotActive = false,
+                )
+            }
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "3",
+                    dayOfWeek = "ПТ",
+                    fraction = 1f,
+                    isCurrent = false,
+                    isNotActive = false,
+                )
+            }
+            Box(modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)) {
+                DateCircle(
+                    dayOfMonth = "4",
+                    dayOfWeek = "СБ",
+                    fraction = 0f,
+                    isCurrent = false,
+                    isNotActive = false,
                 )
             }
         }
@@ -172,7 +106,6 @@ fun DateCircle(
             Color.Gray,
             MaterialTheme.colors.onSurface
         )
-        // TODO тоже нужно сделать перелив
         isCurrent -> Triple(
             lerp(MaterialTheme.colors.surface, MaterialTheme.colors.primary, fraction),
             MaterialTheme.colors.primary,

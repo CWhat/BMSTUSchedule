@@ -19,6 +19,6 @@ interface BookmarksDao {
     @Query("SELECT * FROM ${Constants.BOOKMARKS_DATABASE}")
     suspend fun getAllBookmarks(): List<Bookmark>
 
-    // TODO добавить методы для поиска
+    // TODO добавить методы для поиска (если это вообще нужно)
 
 }

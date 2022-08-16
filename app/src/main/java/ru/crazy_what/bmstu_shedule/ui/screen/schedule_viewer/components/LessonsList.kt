@@ -6,22 +6,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.buffer
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
-import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
-import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLessonWithInfo
-import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.model.LessonWithInfo
 import ru.crazy_what.bmstu_shedule.ui.sidePaddingOfCard
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 
@@ -29,140 +21,55 @@ import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
 @Composable
 fun LessonsListPrev() {
     val fakeData = listOf(
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
                 type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
+                begin = Time(13, 50),
+                end = Time(15, 25),
+                name = "Кратные интегралы и ряды",
+                cabinet = "212л",
+                teacher = "Марчевский И.К.",
+            ),
+            messageFromAbove = "через 10ч 23мин",
+        ),
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
+                type = "лек",
+                begin = Time(13, 50),
+                end = Time(15, 25),
                 name = "Кратные интегралы и ряды",
                 cabinet = "212л",
             ),
-            teachers = listOf("Марчевский И.К."),
         ),
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
                 type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
+                begin = Time(13, 50),
+                end = Time(15, 25),
                 name = "Кратные интегралы и ряды",
                 cabinet = "212л",
+                teacher = "Марчевский И.К.",
             ),
-            teachers = emptyList(),
-        ),
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
-                type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
-                name = "Кратные интегралы и ряды",
-                cabinet = "212л"
-            ),
-            teachers = listOf("Марчевский И.К."),
+            timeProgress = 0.21F,
+            messageBelow = "осталось 1ч 15мин",
         )
     )
 
     BMSTUScheduleTheme(darkTheme = false) {
-        LessonsList(
-            lessonsWithInfo = fakeData.mapIndexed { i, lesson ->
-                LessonWithInfo(
-                    lesson = lesson,
-                    messageFromAbove = if (i == 0) "через 10ч 23мин" else null,
-                    timeProgress = if (i == 2) 0.21F else null,
-                    messageBelow = if (i == 2) "осталось 1ч 15мин" else null,
-                )
-            },
-        )
+        LessonsList(fakeData)
     }
 }
 
 @Composable
-fun NewLessonsList(
+fun LessonsList(
     lessonsWithInfo: List<GroupLessonWithInfo>,
 ) {
     // TODO можно показывать картинку, если список пустой
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(lessonsWithInfo) { lessonWithInfo ->
             Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                with(lessonWithInfo) {
-                    LessonCard(
-                        beginTime = begin,
-                        endTime = end,
-                        name = name,
-                        cabinet = cabinet ?: "",
-                        teacher = teacher ?: "",
-                        type = type ?: "",
-                        timeProgress = timeProgress,
-                        messageFromAbove = messageFromAbove,
-                        messageBelow = messageBelow,
-                    )
-                }
+                LessonCard(lessonWithInfo)
             }
-        }
-    }
-}
-
-@Composable
-fun LessonsList(
-    lessonsWithInfo: List<LessonWithInfo>,
-) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(lessonsWithInfo) { lessonWithInfo ->
-            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                with(lessonWithInfo) {
-                    LessonCard(
-                        lesson,
-                        timeProgress = timeProgress,
-                        messageFromAbove = messageFromAbove,
-                        messageBelow = messageBelow,
-                    )
-                }
-            }
-        }
-    }
-}
-
-// TODO в чем отличие StateFlow от Flow?
-@Composable
-fun LessonsList(lessonsListState: Flow<LessonsListState>) {
-
-    when (val state = lessonsListState.buffer(onBufferOverflow = BufferOverflow.DROP_OLDEST)
-        .collectAsState(initial = LessonsListState.Loading).value) {
-        is LessonsListState.Loading -> {
-            // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
-            // с этим надо что-то делать
-            //CircularProgressIndicator()
-        }
-        is LessonsListState.Error -> ErrorMessage(text = state.message)
-        is LessonsListState.Lessons -> {
-            LessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
-                val beginTime = it.lesson.info.beginTime
-                return@sortedBy beginTime.hours * 60 + beginTime.minutes
-            })
-        }
-    }
-
-}
-
-@Composable
-fun LessonsList(state: LessonsListState) {
-    when (state) {
-        is LessonsListState.Loading -> {
-            // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
-            // с этим надо что-то делать
-            //CircularProgressIndicator()
-        }
-        is LessonsListState.Error -> ErrorMessage(text = state.message)
-        is LessonsListState.Lessons -> {
-            LessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
-                val beginTime = it.lesson.info.beginTime
-                return@sortedBy beginTime.hours * 60 + beginTime.minutes
-            })
         }
     }
 }
@@ -179,7 +86,7 @@ fun LessonsList(
         }
         is GroupLessonsListState.Error -> ErrorMessage(text = state.message)
         is GroupLessonsListState.Lessons -> {
-            NewLessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
+            LessonsList(lessonsWithInfo = state.lessonsWithInfo.sortedBy {
                 val beginTime = it.begin
                 return@sortedBy beginTime.hours * 60 + beginTime.minutes
             })

@@ -1,6 +1,6 @@
 package ru.crazy_what.bmstu_shedule.data.remote.schedule
 
-import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
+import ru.crazy_what.bmstu_shedule.domain.model.SimpleGroupSchedule
 
 interface SchedulerService {
 
@@ -8,8 +8,6 @@ interface SchedulerService {
     suspend fun groups(): ResponseResult<List<String>>
 
     // Возвращает расписание по имени группы
-    suspend fun schedule(group: String): ResponseResult<GroupSchedule>
+    suspend fun schedule(group: String): ResponseResult<SimpleGroupSchedule>
 
 }
-
-fun SchedulerService() = SchedulerServiceImpl()

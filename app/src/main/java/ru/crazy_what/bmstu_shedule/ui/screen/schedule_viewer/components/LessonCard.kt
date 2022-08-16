@@ -13,11 +13,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
-import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLessonWithInfo
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
-import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 import ru.crazy_what.bmstu_shedule.ui.cardCorner
 import ru.crazy_what.bmstu_shedule.ui.cardElevation
 import ru.crazy_what.bmstu_shedule.ui.cardZIndex
@@ -31,78 +29,63 @@ import ru.crazy_what.bmstu_shedule.ui.theme.titleStyle
 @Composable
 fun LessonCardPrev() {
     val fakeData = listOf(
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
                 type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
+                begin = Time(13, 50),
+                end = Time(15, 25),
+                name = "Кратные интегралы и ряды",
+                cabinet = "212л",
+                teacher = "Марчевский И.К.",
+            ),
+            messageFromAbove = "через 10ч 23мин",
+        ),
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
+                type = "лек",
+                begin = Time(13, 50),
+                end = Time(15, 25),
                 name = "Кратные интегралы и ряды",
                 cabinet = "212л",
             ),
-            teachers = listOf("Марчевский И.К."),
         ),
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
+        GroupLessonWithInfo(
+            groupLesson = GroupLesson(
                 type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
+                begin = Time(13, 50),
+                end = Time(15, 25),
                 name = "Кратные интегралы и ряды",
                 cabinet = "212л",
+                teacher = "Марчевский И.К.",
             ),
-            teachers = emptyList(),
-        ),
-        GroupLesson(
-            info = LessonInfo(
-                weekType = WeekType.NUMERATOR,
-                dayOfWeek = DayOfWeek.MONDAY,
-                type = "лек",
-                beginTime = Time(13, 50),
-                endTime = Time(15, 25),
-                name = "Кратные интегралы и ряды",
-                cabinet = "212л"
-            ),
-            teachers = listOf("Марчевский И.К."),
+            timeProgress = 0.21F,
+            messageBelow = "осталось 1ч 15мин",
         )
     )
 
     BMSTUScheduleTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                LessonCard(fakeData[0], messageFromAbove = "через 10ч 23мин")
-            }
-            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                LessonCard(fakeData[1])
-            }
-            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
-                LessonCard(fakeData[2], timeProgress = 0.21F, messageBelow = "осталось 1ч 15мин")
+            fakeData.forEach {
+                Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                    LessonCard(it)
+                }
             }
         }
     }
 }
 
 @Composable
-fun LessonCard(
-    lesson: GroupLesson,
-    timeProgress: Float? = null,
-    messageFromAbove: String? = null,
-    messageBelow: String? = null,
-) {
-    val teachers = lesson.teachers.joinToString(separator = ", ")
-
+fun LessonCard(lesson: GroupLessonWithInfo) {
     LessonCard(
-        beginTime = lesson.info.beginTime,
-        endTime = lesson.info.endTime,
-        name = lesson.info.name,
-        cabinet = lesson.info.cabinet,
-        teacher = teachers,
-        type = lesson.info.type,
-        timeProgress = timeProgress,
-        messageFromAbove = messageFromAbove,
-        messageBelow = messageBelow,
+        beginTime = lesson.begin,
+        endTime = lesson.end,
+        name = lesson.name,
+        cabinet = lesson.cabinet ?: "",
+        teacher = lesson.teacher ?: "",
+        type = lesson.type ?: "",
+        timeProgress = lesson.timeProgress,
+        messageFromAbove = lesson.messageFromAbove,
+        messageBelow = lesson.messageBelow,
     )
 }
 

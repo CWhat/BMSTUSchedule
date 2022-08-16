@@ -3,11 +3,6 @@ package ru.crazy_what.bmstu_shedule.domain.model
 import ru.crazy_what.bmstu_shedule.date.Time
 
 data class GroupLesson(
-    val info: LessonInfo,
-    val teachers: List<String>,
-)
-
-data class NewGroupLesson(
     private val baseLesson: BaseLessonInfo,
     val teacher: String?,
     val cabinet: String?,
@@ -42,7 +37,7 @@ data class BaseLessonInfo(
 )
 
 data class GroupLessonWithInfo(
-    private val groupLesson: NewGroupLesson,
+    private val groupLesson: GroupLesson,
     val timeProgress: Float? = null,
     val messageFromAbove: String? = null,
     val messageBelow: String? = null,

@@ -27,7 +27,10 @@ fun MainTab(viewModel: MainTabViewModel) {
         is MainState.MainGroup -> {
             Column(modifier = Modifier.fillMaxSize()) {
                 SimpleBasicTopAppBar(title = state.groupName)
-                GroupScheduleViewer(groupScheduler = state.groupScheduler)
+                GroupScheduleViewer(
+                    modifier = Modifier.fillMaxSize(),
+                    groupSchedule = state.groupScheduler,
+                )
             }
         }
         is MainState.Error -> {

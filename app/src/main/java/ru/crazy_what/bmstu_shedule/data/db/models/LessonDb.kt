@@ -1,14 +1,18 @@
 package ru.crazy_what.bmstu_shedule.data.db.models
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.common.Group
 import ru.crazy_what.bmstu_shedule.data.db.converters.DayOfWeakConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.SimpleListConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.TimeConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.WeekTypeConverter
-import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
-import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
+import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.DayOfWeek
+import ru.crazy_what.bmstu_shedule.date.Time
 
 @Entity(
     tableName = Constants.LESSONS_DATABASE,
@@ -21,8 +25,13 @@ import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
 )
 data class LessonDb(
 
-    @Embedded
-    val info: LessonInfo,
+    val weekType: WeekType,
+    val dayOfWeek: DayOfWeek,
+    val beginTime: Time,
+    val endTime: Time,
+    val type: String,
+    val name: String,
+    val cabinet: String,
 
     @ColumnInfo(name = Constants.GROUPS_COLUMN_NAME)
     val groups: List<Group>,
@@ -31,9 +40,4 @@ data class LessonDb(
     @PrimaryKey(autoGenerate = true)
     // возможно, можно обойтись и обычным val, но я не уверен
     var id: Id? = null,
-)
-
-fun LessonDb.toGroupLesson() = GroupLesson(
-    info = this.info,
-    teachers = this.teachers,
 )

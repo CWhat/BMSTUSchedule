@@ -7,13 +7,8 @@ import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
 import java.util.*
 
-data class GroupSchedule(
-    val groupName: String,
-    val lessons: Map<Pair<WeekType, DayOfWeek>, List<GroupLesson>>,
-)
-
 // По сравнению с SimpleGroupSchedule, уже полноценное расписание
-interface NewGroupSchedule {
+interface GroupSchedule {
 
     val groupName: String
 
@@ -37,7 +32,7 @@ class GroupScheduleImpl(
     currentTime: Calendar,
     private val schedule: SimpleGroupSchedule,
     override val isNumeratorFirst: Boolean = true,
-) : NewGroupSchedule {
+) : GroupSchedule {
 
     override var currentTime: Calendar = currentTime
         set(value) {

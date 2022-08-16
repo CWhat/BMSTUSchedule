@@ -9,8 +9,7 @@ import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.toTime
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
-import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
-import ru.crazy_what.bmstu_shedule.domain.model.LessonInfo
+import ru.crazy_what.bmstu_shedule.domain.model.SimpleGroupSchedule
 
 class SchedulerServiceImpl : SchedulerService {
 
@@ -52,7 +51,7 @@ class SchedulerServiceImpl : SchedulerService {
     }
 
     // TODO выглядит слишком страшно, надо бы отрефакторить
-    override suspend fun schedule(group: String): ResponseResult<GroupSchedule> {
+    override suspend fun schedule(group: String): ResponseResult<SimpleGroupSchedule> {
         // TODO возможно, в случае ошибки надо выдавать нормальные сообщения
         try {
             if (!groupsMapIsInitialized)
@@ -86,7 +85,7 @@ class SchedulerServiceImpl : SchedulerService {
             }
 
             return@withContext ResponseResult.success(
-                GroupSchedule(
+                SimpleGroupSchedule(
                     groupName = group,
                     lessons = lessonsMap,
                 )
@@ -98,8 +97,6 @@ class SchedulerServiceImpl : SchedulerService {
     private fun tdToLessonDto(
         td: Element,
         time: String,
-        weekType: WeekType,
-        dayOfWeek: DayOfWeek
     ): GroupLesson {
         if (td.childrenSize() != 4)
             error("Я не понимаю такое расписание")
@@ -126,21 +123,16 @@ class SchedulerServiceImpl : SchedulerService {
 
         // Четвертый - это преподаватель
         itemText = td.child(3).text()
-        val teachers = if (itemText.isBlank()) "" else itemText
+        val teacher = if (itemText.isBlank()) "" else itemText
 
         return GroupLesson(
-            info = LessonInfo(
-                weekType = weekType,
-                dayOfWeek = dayOfWeek,
-                beginTime = beginTime.toTime(),
-                endTime = endTime.toTime(),
-                type = type,
-                name = name,
-                cabinet = cabinet,
-            ),
-            teachers = listOf(teachers),
-
-            )
+            begin = beginTime.toTime(),
+            end = endTime.toTime(),
+            type = type,
+            name = name,
+            cabinet = cabinet,
+            teacher = teacher,
+        )
     }
 
     private fun tableToLessonsList(
@@ -168,8 +160,6 @@ class SchedulerServiceImpl : SchedulerService {
                         tdToLessonDto(
                             numeratorPair,
                             time,
-                            weekType = WeekType.NUMERATOR,
-                            dayOfWeek = dayOfWeek,
                         )
                     dayOfNumerator.add(lesson)
                 }
@@ -178,8 +168,6 @@ class SchedulerServiceImpl : SchedulerService {
                     val lesson = tdToLessonDto(
                         denominatorPair,
                         time,
-                        weekType = WeekType.DENOMINATOR,
-                        dayOfWeek = dayOfWeek,
                     )
                     dayOfDenominator.add(lesson)
                 }
@@ -187,22 +175,10 @@ class SchedulerServiceImpl : SchedulerService {
             } else {
                 // расписание и на числитель, и на знаменатель одинаковое
                 val pair = tds[1]
-                val numLesson = tdToLessonDto(pair, time, WeekType.NUMERATOR, dayOfWeek)
-                val denomLesson = GroupLesson(
-                    info = LessonInfo(
-                        weekType = WeekType.DENOMINATOR,
-                        dayOfWeek = dayOfWeek,
-                        beginTime = numLesson.info.beginTime,
-                        endTime = numLesson.info.endTime,
-                        type = numLesson.info.type,
-                        name = numLesson.info.name,
-                        cabinet = numLesson.info.cabinet,
-                    ),
-                    teachers = numLesson.teachers,
-                )
+                val numLesson = tdToLessonDto(pair, time)
 
                 dayOfNumerator.add(numLesson)
-                dayOfDenominator.add(denomLesson)
+                dayOfDenominator.add(numLesson)
             }
         }
 

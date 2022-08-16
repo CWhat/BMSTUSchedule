@@ -1,6 +1,5 @@
 package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
-import android.util.Log
 import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.data.schedule.getMonday
 import ru.crazy_what.bmstu_shedule.data.schedule.getTimeBetween
@@ -71,11 +70,6 @@ class DateHelper(
         weeksCount = getTimeBetween(startMonday, endMonday) / 7 + 1
         currentNumDay = week7to6(getTimeBetween(start, currentDate))
         currentNumWeek = weekNum(currentNumDay)
-
-        Log.d("MyLog",
-            "daysCount = $daysCount, weeksCount = $weeksCount, " +
-                    "currentNumDay = $currentNumDay, currentNumWeek = $currentNumWeek, " +
-                    "startOffset = $startOffset")
     }
 
     private fun dateToDayNum(date: Calendar): Int = week7to6(getTimeBetween(start, date))

@@ -50,7 +50,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGroupScheduleRepository(lessonsDao: LessonsDao): GroupScheduleRepository =
-        GroupScheduleRepositoryImpl(lessonsDao)
+    fun provideGroupScheduleRepository(): GroupScheduleRepository = GroupScheduleRepositoryImpl()
 
 }
