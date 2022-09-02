@@ -3,33 +3,23 @@ package ru.crazy_what.bmstu_shedule.ui.activities.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.navigation
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.crazy_what.bmstu_shedule.date.Month
 import ru.crazy_what.bmstu_shedule.rememberAppState
 import ru.crazy_what.bmstu_shedule.ui.screen.ScreensConstants
-import ru.crazy_what.bmstu_shedule.ui.screen.load_schedule.addLoadScheduleScreen
 import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.addScheduleScreen
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.CalendarTabs
-import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.GroupScheduleViewerPrev
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 import ru.crazy_what.bmstu_shedule.ui.tabs.components.MainBottomBar
 import ru.crazy_what.bmstu_shedule.ui.tabs.createMainScreenNavGraph
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
-import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -56,7 +46,8 @@ class MainActivity : ComponentActivity() {
                             navController = appState.navController,
                             // TODO выбирать в зависимости от того, скачано ли расписание и выбрана ли основная группа
                             //startDestination = ScreensConstants.ROUTE_MAIN_SCREEN,
-                            startDestination = ScreensConstants.ROUTE_LOAD_SCHEDULE,
+                            // TODO добавить splash screen
+                            startDestination = ScreensConstants.ROUTE_MAIN_SCREEN,
                         ) {
                             navigation(
                                 startDestination = TabsConstants.ROUTE_MAIN_TAB,
@@ -68,10 +59,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
-                            addScheduleScreen()
-                            addLoadScheduleScreen {
-                                appState.navigateToMainScreen()
-                            }
+                            addScheduleScreen(onBack = appState::upPress)
                         }
                         if (appState.shouldShowBottomBar) {
                             MainBottomBar(

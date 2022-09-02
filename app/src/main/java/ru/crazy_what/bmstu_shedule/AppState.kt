@@ -87,11 +87,6 @@ class AppState(
         navController.navigate("${ScreensConstants.ROUTE_SCHEDULE_SCREEN}/$group")
     }
 
-    // TODO сделать, как в Jetsnack с передачей NavBackStackEntry
-    fun navigateToLoadSchedule() {
-        navController.navigate(ScreensConstants.ROUTE_LOAD_SCHEDULE)
-    }
-
 }
 
 /**

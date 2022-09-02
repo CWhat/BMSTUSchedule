@@ -1,8 +1,8 @@
 package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
-import ru.crazy_what.bmstu_shedule.data.schedule.getMonday
-import ru.crazy_what.bmstu_shedule.data.schedule.getTimeBetween
+import ru.crazy_what.bmstu_shedule.date.WeekType
+import ru.crazy_what.bmstu_shedule.data.getMonday
+import ru.crazy_what.bmstu_shedule.data.getTimeBetween
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import java.util.*
 

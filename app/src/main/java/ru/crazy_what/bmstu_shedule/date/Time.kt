@@ -27,13 +27,6 @@ data class Time(
     operator fun minus(right: Time): Time {
         val diffMin = this.minutes - right.minutes
         return if (diffMin >= 0) Time(this.hours - right.hours, diffMin)
-        else Time(this.hours - right.hours - 1, 60 - diffMin)
+        else Time(this.hours - right.hours - 1, 60 + diffMin) // +, т.к. diffMin уже отрицательный
     }
-}
-
-// TODO стоит добавить проверку ошибок
-// TODO можно добавить проверку на количество символов (маскимум 5)
-fun String.toTime(delimiter: String = ":"): Time {
-    val list = this.split(delimiter)
-    return Time(list[0].toInt(), list[1].toInt())
 }

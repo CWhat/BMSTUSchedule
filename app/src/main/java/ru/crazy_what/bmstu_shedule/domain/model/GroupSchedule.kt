@@ -1,10 +1,10 @@
 package ru.crazy_what.bmstu_shedule.domain.model
 
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
-import ru.crazy_what.bmstu_shedule.data.schedule.getMonday
-import ru.crazy_what.bmstu_shedule.data.schedule.getTimeBetween
+import ru.crazy_what.bmstu_shedule.data.getMonday
+import ru.crazy_what.bmstu_shedule.data.getTimeBetween
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.date.WeekType
 import java.util.*
 
 // По сравнению с SimpleGroupSchedule, уже полноценное расписание
@@ -26,6 +26,7 @@ interface GroupSchedule {
 
 }
 
+// TODO написать тесты
 class GroupScheduleImpl(
     override val start: Calendar,
     override val end: Calendar,
@@ -110,8 +111,8 @@ class GroupScheduleImpl(
         })
     }
 
-    private fun Time.toScheduleTime(): String = if (this.hours != 0) "${this.hours}ч " else "" +
-            if (this.minutes != 0) "${this.minutes}мин" else ""
+    private fun Time.toScheduleTime(): String = (if (this.hours != 0) "${this.hours}ч " else "") +
+            (if (this.minutes != 0) "${this.minutes}мин" else "")
 
     private fun setMessage() {
         val year = currentTime.get(Calendar.YEAR)
@@ -127,24 +128,6 @@ class GroupScheduleImpl(
         }
         for (i in lessons.indices) {
             val lesson = lessons[i]
-            /*if (lesson.begin <= current && current < lesson.end) {
-                // делаем сообщение, сколько осталось
-                val left = lesson.end - current
-                message = LessonMessage(
-                    year, month, day, lesson.begin,
-                    timeProgress = left.absMinutes.toFloat() / (lesson.end - lesson.begin).absMinutes,
-                    messageBelow = "осталось " + left.toScheduleTime(),
-                )
-                return
-            } else if (lesson.end <= current && i != lessons.size - 1) {
-                // делаем для следующего дня сообщение, через сколько
-                val diff = lessons[i + 1].begin - current
-                message = LessonMessage(
-                    year, month, day, lesson.begin,
-                    messageFromAbove = "через " + diff.toScheduleTime(),
-                )
-                return
-            }*/
             if (current < lesson.begin) {
                 val diff = lesson.begin - current
                 message = LessonMessage(
@@ -169,7 +152,8 @@ class GroupScheduleImpl(
 
         message = if (nextLessons.isNotEmpty()) {
             // делаем сообщение для этого первого занятия
-            val firstLesson = nextLessons.first()
+            val firstLesson =
+                nextLessons.minByOrNull { it.begin.hours * 60 + it.begin.minutes }!!
             val nextDay = (currentTime.clone() as Calendar).apply { this.add(Calendar.DATE, 1) }
 
             LessonMessage(

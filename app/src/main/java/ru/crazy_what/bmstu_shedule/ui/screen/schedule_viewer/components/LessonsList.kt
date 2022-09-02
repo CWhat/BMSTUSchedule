@@ -1,18 +1,19 @@
 package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.crazy_what.bmstu_shedule.date.Time
-import ru.crazy_what.bmstu_shedule.domain.model.GroupLessonWithInfo
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
+import ru.crazy_what.bmstu_shedule.domain.model.GroupLessonWithInfo
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
 import ru.crazy_what.bmstu_shedule.ui.sidePaddingOfCard
 import ru.crazy_what.bmstu_shedule.ui.theme.BMSTUScheduleTheme
@@ -65,10 +66,22 @@ fun LessonsList(
     lessonsWithInfo: List<GroupLessonWithInfo>,
 ) {
     // TODO можно показывать картинку, если список пустой
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    /*LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(lessonsWithInfo) { lessonWithInfo ->
             Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
                 LessonCard(lessonWithInfo)
+            }
+        }
+    }*/
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        lessonsWithInfo.forEach {
+            Box(modifier = Modifier.padding(sidePaddingOfCard, 4.dp)) {
+                LessonCard(it)
             }
         }
     }
@@ -80,9 +93,13 @@ fun LessonsList(
 ) {
     when (state) {
         is GroupLessonsListState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize())
+
             // TODO если его оставить, то он может показываться на мгновение, что выглядит не очень
             // с этим надо что-то делать
-            //CircularProgressIndicator()
+            //Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            //    CircularProgressIndicator()
+            //}
         }
         is GroupLessonsListState.Error -> ErrorMessage(text = state.message)
         is GroupLessonsListState.Lessons -> {

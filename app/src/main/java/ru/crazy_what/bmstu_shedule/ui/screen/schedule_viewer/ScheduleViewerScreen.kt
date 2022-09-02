@@ -23,6 +23,7 @@ import ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components.Schedule
 @Composable
 fun ScheduleViewerScreen(
     viewModel: ScheduleScreenViewModel,
+    onBack: () -> Unit,
 ) {
     val groupName = viewModel.groupName.value
     // TODO добавить добавление в закладки
@@ -32,7 +33,7 @@ fun ScheduleViewerScreen(
         BasicTopAppBarVector(
             title = groupName,
             leftIcon = Icons.Filled.ArrowBack,
-            byLeftClick = { /* TODO возвращаться назад */ },
+            byLeftClick = onBack,
             rightIcon = if (isBookmark) Icons.Filled.Star else HollowStar,
             byRightClick = { viewModel.addBookmark() },
         )
@@ -41,13 +42,13 @@ fun ScheduleViewerScreen(
 }
 
 @ExperimentalPagerApi
-fun NavGraphBuilder.addScheduleScreen() {
+fun NavGraphBuilder.addScheduleScreen(onBack: () -> Unit) {
     composable(
         route = "${ScreensConstants.ROUTE_SCHEDULE_SCREEN}/{${Constants.PARAM_GROUP_NAME}}",
         arguments = listOf(navArgument(name = Constants.PARAM_GROUP_NAME) {
             type = NavType.StringType
         })
     ) { navBackStackEntry ->
-        ScheduleViewerScreen(viewModel = hiltViewModel(navBackStackEntry))
+        ScheduleViewerScreen(viewModel = hiltViewModel(navBackStackEntry), onBack = onBack)
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="ru.crazy_what.bmstu_shedule">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,11 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BMSTUSchedule">
+        android:theme="@style/Theme.BMSTUSchedule"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
         <activity
             android:name=".ui.activities.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.BMSTUSchedule.NoActionBar">
             <intent-filter>

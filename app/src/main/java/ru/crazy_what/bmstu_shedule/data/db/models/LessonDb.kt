@@ -10,7 +10,7 @@ import ru.crazy_what.bmstu_shedule.data.db.converters.DayOfWeakConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.SimpleListConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.TimeConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.WeekTypeConverter
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
 

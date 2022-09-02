@@ -17,10 +17,11 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
 import java.util.*
 import kotlin.math.absoluteValue
+import kotlin.math.round
 
 @OptIn(ExperimentalPagerApi::class, FlowPreview::class)
 @Composable
@@ -40,10 +41,17 @@ fun CalendarTabs(
         initialPage = helper.currentNumDay,
     )
 
+    val daysOffset by remember {
+        derivedStateOf {
+            round((daysState.currentPage + daysState.currentPageOffset) * 40) / 40
+        }
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     // перелистывание при изменении страницы дня
     LaunchedEffect(daysState) {
+        // TODO на более слабых нужно ждать больше; костыль
         // Collect from the a snapshotFlow reading the currentPage
         snapshotFlow { daysState.currentPage }.debounce(200)
             .collect { dayNum ->
@@ -82,18 +90,15 @@ fun CalendarTabs(
 
             Column(modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center) {
-                Box(
+                Text(
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .align(Alignment.CenterHorizontally),
-                ) {
-                    Text(
-                        text = "${weekInfo.weekNum + 1} неделя, ${if (weekInfo.type == WeekType.NUMERATOR) "числитель" else "знаменатель"} ",
-                        textAlign = TextAlign.Center,
-                        style = littleTitleStyle,
-                        color = MaterialTheme.colors.onSurface,
-                    )
-                }
+                    text = "${weekInfo.weekNum + 1} неделя, ${if (weekInfo.type == WeekType.NUMERATOR) "числитель" else "знаменатель"} ",
+                    textAlign = TextAlign.Center,
+                    style = littleTitleStyle,
+                    color = MaterialTheme.colors.onSurface,
+                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -116,7 +121,8 @@ fun CalendarTabs(
 
                         Box(modifier = dayModifier) {
                             val fraction = 1F -
-                                    ((daysState.currentPage - day.dayNum) + daysState.currentPageOffset)
+                                    //((daysState.currentPage - day.dayNum) + daysState.currentPageOffset)
+                                    (daysOffset - day.dayNum)
                                         .coerceIn(-1F, 1F).absoluteValue
 
                             DateCircle(
@@ -138,6 +144,7 @@ fun CalendarTabs(
             count = helper.daysCount,
             state = daysState,
         ) { dayNum ->
+            //val date = remember(dayNum) { helper.dayNumToDate(dayNum) }
             val date = remember { helper.dayNumToDate(dayNum) }
             content(date)
         }

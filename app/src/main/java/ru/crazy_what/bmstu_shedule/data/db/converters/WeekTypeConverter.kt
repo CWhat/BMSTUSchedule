@@ -1,7 +1,7 @@
 package ru.crazy_what.bmstu_shedule.data.db.converters
 
 import androidx.room.TypeConverter
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
+import ru.crazy_what.bmstu_shedule.date.WeekType
 
 class WeekTypeConverter {
     @TypeConverter

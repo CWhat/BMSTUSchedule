@@ -3,6 +3,7 @@ package ru.crazy_what.bmstu_shedule.domain.use_case
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
+import ru.crazy_what.bmstu_shedule.common.ResponseResult
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import javax.inject.Inject
@@ -30,10 +31,9 @@ class GetGroupSchedule @Inject constructor(private val groupScheduleRepository: 
 
     operator fun invoke(group: String): Flow<Resource<GroupSchedule>> = flow {
         emit(Resource.Loading())
-        // TODO нужно добавить обработку ошибок
-        val groupSchedule = groupScheduleRepository.searchScheduleByGroupName(group)
-        emit(
-            Resource.Success(groupSchedule)
-        )
+        when (val groupScheduleResult = groupScheduleRepository.searchScheduleByGroupName(group)) {
+            is ResponseResult.Success -> emit(Resource.Success(groupScheduleResult.data))
+            is ResponseResult.Error -> emit(Resource.Error(groupScheduleResult.message))
+        }
     }
 }

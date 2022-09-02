@@ -60,7 +60,6 @@ fun SimpleListPrev2() {
 private val fakeData =
     listOf("АК", "БМТ", "ИБМ", "ИУ", "Л", "ЛТ", "МТ", "РЛ", "РКТ", "РЛ", "ФН", "Э", "ЮР")
 
-// TODO добавить Modifier в параметры функции
 @Composable
 fun RoundedColumn(
     modifier: Modifier = Modifier,

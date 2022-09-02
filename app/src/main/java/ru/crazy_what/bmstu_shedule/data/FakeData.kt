@@ -1,45 +1,15 @@
-package ru.crazy_what.bmstu_shedule.data.db
+package ru.crazy_what.bmstu_shedule.data
 
-import ru.crazy_what.bmstu_shedule.common.Group
-import ru.crazy_what.bmstu_shedule.data.schedule.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
-import ru.crazy_what.bmstu_shedule.domain.model.GroupScheduleImpl
+import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
+import ru.crazy_what.bmstu_shedule.domain.model.GroupScheduleImpl
 import ru.crazy_what.bmstu_shedule.domain.model.SimpleGroupSchedule
-import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import java.util.*
-import javax.inject.Inject
 
-class GroupScheduleRepositoryImpl @Inject constructor() : GroupScheduleRepository {
-
-    override suspend fun insertSchedule(schedule: SimpleGroupSchedule) {
-        // TODO реализовать
-    }
-
-    // TODO проверить
-    override suspend fun deleteSchedule(groupName: String) {
-        // TODO реализовать
-    }
-
-    override suspend fun searchScheduleByGroupName(groupName: String): GroupSchedule {
-        // TODO реализовать
-        return fakeData(groupName)
-    }
-
-    override suspend fun searchGroups(text: String): List<String> {
-        // TODO реализовать
-        return emptyList()
-    }
-
-    override suspend fun getAllGroupsName(): List<Group> {
-        // TODO реализовать
-        return listOf("ФН2-51Б", "ФН2-52Б", "ФН2-61Б", "ФН2-62Б")
-    }
-}
-
-private fun fakeData(groupName: String): GroupSchedule {
+fun fakeData(groupName: String): GroupSchedule {
     val fakeData = SimpleGroupSchedule(
         groupName = groupName,
         lessons = mapOf(

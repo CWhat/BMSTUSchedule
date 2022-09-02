@@ -7,12 +7,17 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import ru.crazy_what.bmstu_shedule.BuildConfig
 import ru.crazy_what.bmstu_shedule.common.Constants
+import ru.crazy_what.bmstu_shedule.data.GroupScheduleRepositoryImpl
 import ru.crazy_what.bmstu_shedule.data.db.*
-import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerService
-import ru.crazy_what.bmstu_shedule.data.remote.schedule.SchedulerServiceImpl
+import ru.crazy_what.bmstu_shedule.data.remote.ScheduleService
 import ru.crazy_what.bmstu_shedule.domain.repository.BookmarksRepository
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -21,7 +26,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSchedulerService(): SchedulerService = SchedulerServiceImpl()
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .callTimeout(2, TimeUnit.SECONDS)
+        .connectTimeout(2, TimeUnit.SECONDS)
+        .readTimeout(2, TimeUnit.SECONDS)
+        .writeTimeout(2, TimeUnit.SECONDS)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideScheduleService(okHttpClient: OkHttpClient): ScheduleService = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(ScheduleService::class.java)
 
     @Provides
     @Singleton
@@ -50,6 +69,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGroupScheduleRepository(): GroupScheduleRepository = GroupScheduleRepositoryImpl()
+    fun provideGroupScheduleRepository(scheduleService: ScheduleService): GroupScheduleRepository =
+        GroupScheduleRepositoryImpl(scheduleService)
 
 }

@@ -12,7 +12,7 @@ class GetMainGroup @Inject constructor(){
     operator fun invoke(): Flow<Resource<String>> = flow {
         // TODO сделать
         emit(Resource.Loading())
-        emit(Resource.Success("ФН2-32Б"))
+        emit(Resource.Success("ФН2-52Б"))
     }
 
 }
