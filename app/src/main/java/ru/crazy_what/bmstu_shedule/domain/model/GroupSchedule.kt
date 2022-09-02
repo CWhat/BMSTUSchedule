@@ -77,7 +77,7 @@ class GroupScheduleImpl(
     )
 
     private fun getDayType(date: Calendar): Pair<WeekType, DayOfWeek> {
-        val dayNum = offset + getTimeBetween(start, end)
+        val dayNum = offset + getTimeBetween(start, date)
         val weekNum = dayNum / 7
 
         val weekType = if (isNumeratorFirst) {

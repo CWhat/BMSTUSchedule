@@ -6,6 +6,7 @@ import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 
 interface GroupScheduleRepository {
 
+    // TODO возвращать SimpleGroupSchedule
     suspend fun searchScheduleByGroupName(groupName: String): ResponseResult<GroupSchedule>
 
     suspend fun getAllGroupsName(): ResponseResult<List<Group>>
