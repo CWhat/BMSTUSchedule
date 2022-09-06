@@ -13,7 +13,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import ru.crazy_what.bmstu_shedule.BuildConfig
 import ru.crazy_what.bmstu_shedule.common.Constants
 import ru.crazy_what.bmstu_shedule.data.GroupScheduleRepositoryImpl
-import ru.crazy_what.bmstu_shedule.data.db.*
+import ru.crazy_what.bmstu_shedule.data.db.BookmarksDao
+import ru.crazy_what.bmstu_shedule.data.db.BookmarksDatabase
+import ru.crazy_what.bmstu_shedule.data.db.BookmarksRepositoryImpl
+import ru.crazy_what.bmstu_shedule.data.db.LessonsDatabase
 import ru.crazy_what.bmstu_shedule.data.remote.ScheduleService
 import ru.crazy_what.bmstu_shedule.domain.repository.BookmarksRepository
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
@@ -27,10 +30,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
-        .callTimeout(2, TimeUnit.SECONDS)
-        .connectTimeout(2, TimeUnit.SECONDS)
-        .readTimeout(2, TimeUnit.SECONDS)
-        .writeTimeout(2, TimeUnit.SECONDS)
+        .callTimeout(5, TimeUnit.SECONDS)
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(5, TimeUnit.SECONDS)
         .build()
 
     @Provides

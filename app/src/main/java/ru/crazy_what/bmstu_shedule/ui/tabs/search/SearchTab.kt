@@ -1,13 +1,17 @@
 package ru.crazy_what.bmstu_shedule.ui.tabs.search
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.crazy_what.bmstu_shedule.ui.base_components.SearchTopAppBar
+import ru.crazy_what.bmstu_shedule.ui.base_components.SimpleBasicTopAppBar
 import ru.crazy_what.bmstu_shedule.ui.tabs.TabsConstants
 import ru.crazy_what.bmstu_shedule.ui.tabs.search.components.SearchGroupList
 
@@ -19,7 +23,14 @@ fun SearchTab(
     when (val state = viewModel.state.value) {
         is SearchState.Loading -> {
         }
-        is SearchState.Error -> { /* TODO сделать сообщение об ошибке */
+        is SearchState.Error -> {
+            // TODO сделать красивое сообщение об ошибке
+            Column(modifier = Modifier.fillMaxSize()) {
+                SimpleBasicTopAppBar(title = "Ошибка")
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Что-то пошло не так: ${state.message}")
+                }
+            }
         }
         is SearchState.ShowGroups -> {
             var request by remember { mutableStateOf("") }

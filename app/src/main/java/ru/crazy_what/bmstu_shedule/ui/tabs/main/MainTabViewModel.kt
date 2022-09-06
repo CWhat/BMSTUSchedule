@@ -18,6 +18,7 @@ class MainTabViewModel @Inject constructor(
     private val getGroupSchedule: GetGroupSchedule,
 ) : ViewModel() {
 
+    // TODO иногда обновлять время у scheduler
     private val _state = mutableStateOf<MainState>(MainState.Loading)
     val state: State<MainState> = _state
 

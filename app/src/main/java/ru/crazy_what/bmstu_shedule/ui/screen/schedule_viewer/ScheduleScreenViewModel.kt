@@ -26,10 +26,12 @@ class ScheduleScreenViewModel @Inject constructor(
     private val _groupName = mutableStateOf("ФН2-32Б")
     val groupName: State<String> = _groupName
 
+    // TODO иногда обновлять время у groupScheduler
     private val _state = mutableStateOf<ScheduleViewerState>(ScheduleViewerState.Loading)
     val state: State<ScheduleViewerState> = _state
 
     init {
+        // TODO если группа не указана, то надо или показывать сообщение об ошибке, или падать
         savedStateHandle.get<String>(Constants.PARAM_GROUP_NAME)
             ?.let { groupName -> _groupName.value = groupName }
 
