@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.crazy_what.bmstu_shedule.common.Resource
 import ru.crazy_what.bmstu_shedule.common.ResponseResult
+import ru.crazy_what.bmstu_shedule.domain.model.Group
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import javax.inject.Inject
 
@@ -22,10 +23,10 @@ import javax.inject.Inject
 
 class GetGroups @Inject constructor(private val groupScheduleRepository: GroupScheduleRepository) {
 
-    operator fun invoke(): Flow<Resource<List<String>>> = flow {
+    operator fun invoke(): Flow<Resource<List<Group>>> = flow {
         emit(Resource.Loading())
 
-        when (val groupsResult = groupScheduleRepository.getAllGroupsName()) {
+        when (val groupsResult = groupScheduleRepository.getAllGroups()) {
             is ResponseResult.Success -> emit(Resource.Success(groupsResult.data))
             is ResponseResult.Error -> emit(Resource.Error(groupsResult.message))
         }

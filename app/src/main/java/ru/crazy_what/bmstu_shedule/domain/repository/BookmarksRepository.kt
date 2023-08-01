@@ -1,13 +1,14 @@
 package ru.crazy_what.bmstu_shedule.domain.repository
 
-import ru.crazy_what.bmstu_shedule.domain.model.Bookmark
+import ru.crazy_what.bmstu_shedule.domain.model.Group
 
 interface BookmarksRepository {
 
-    suspend fun addBookmark(bookmark: Bookmark)
+    suspend fun addBookmark(uuid: String)
 
-    suspend fun deleteBookmark(bookmark: Bookmark)
+    suspend fun deleteBookmark(uuid: String)
 
-    suspend fun getAllBookmarks(): List<Bookmark>
+    // TODO добавить список преподавателей
+    suspend fun getAllBookmarks(): List<Group>
 
 }

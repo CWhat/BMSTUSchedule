@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+// TODO тут ничего не сделано
 @HiltViewModel
 class MoreViewModel @Inject constructor() : ViewModel() {
 

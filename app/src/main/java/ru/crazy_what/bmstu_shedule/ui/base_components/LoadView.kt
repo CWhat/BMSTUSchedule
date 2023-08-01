@@ -8,6 +8,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
+// TODO сделать
+// TODO добавить отложенный показ (чтобы не было моментов, когда "кружочек" показывается на мгновение)
 @Preview(showSystemUi = true)
 @Composable
 fun LoadView() {

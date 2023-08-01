@@ -9,7 +9,7 @@ import ru.crazy_what.bmstu_shedule.ui.tabs.search.addSearchTab
 
 @ExperimentalPagerApi
 fun NavGraphBuilder.createMainScreenNavGraph(
-    selectedGroup: (String) -> Unit,
+    selectedGroup: (id: String) -> Unit,
 ) {
     addMainTab()
     addBookmarksTab(selectedGroup)

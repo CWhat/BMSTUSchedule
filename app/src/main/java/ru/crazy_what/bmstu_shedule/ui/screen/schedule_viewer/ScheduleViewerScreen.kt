@@ -44,8 +44,8 @@ fun ScheduleViewerScreen(
 @ExperimentalPagerApi
 fun NavGraphBuilder.addScheduleScreen(onBack: () -> Unit) {
     composable(
-        route = "${ScreensConstants.ROUTE_SCHEDULE_SCREEN}/{${Constants.PARAM_GROUP_NAME}}",
-        arguments = listOf(navArgument(name = Constants.PARAM_GROUP_NAME) {
+        route = "${ScreensConstants.ROUTE_SCHEDULE_SCREEN}/{${Constants.PARAM_GROUP_UUID}}",
+        arguments = listOf(navArgument(name = Constants.PARAM_GROUP_UUID) {
             type = NavType.StringType
         })
     ) { navBackStackEntry ->

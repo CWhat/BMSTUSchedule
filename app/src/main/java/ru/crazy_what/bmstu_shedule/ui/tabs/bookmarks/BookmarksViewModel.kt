@@ -28,9 +28,7 @@ class BookmarksViewModel @Inject constructor(
             when (result) {
                 is Resource.Loading -> _state.value = BookmarksState.Loading
                 is Resource.Success -> result.data?.let {
-                    _state.value = BookmarksState.Bookmarks(it.map { bookmark ->
-                        bookmark.groupName
-                    })
+                    _state.value = BookmarksState.Bookmarks(it)
                 }
                 is Resource.Error -> result.message?.let {
                     _state.value = BookmarksState.Error(it)

@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import ru.crazy_what.bmstu_shedule.ui.base_components.ErrorMessage
@@ -33,11 +32,12 @@ fun BookmarksTab(
             is BookmarksState.Loading -> {
                 LoadView()
             }
+
             is BookmarksState.Bookmarks -> {
                 SimpleList(
                     modifier = Modifier.fillMaxSize(),
-                    items = state.groups,
-                    onClickItem = { _, group -> clickOnGroups(group) },
+                    items = state.groups.map { return@map Pair(it.name, it.uuid) },
+                    onClickItem = { id -> clickOnGroups(id) },
                     placeholder = {
                         Text(
                             text = "Здесь пока пусто",
@@ -47,6 +47,7 @@ fun BookmarksTab(
                     }
                 )
             }
+
             is BookmarksState.Error -> {
                 ErrorMessage(
                     text = "При загрузке закладок произошла ошибка: ${state.message}",

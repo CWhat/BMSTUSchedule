@@ -44,9 +44,6 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .weight(1F),
                             navController = appState.navController,
-                            // TODO выбирать в зависимости от того, скачано ли расписание и выбрана ли основная группа
-                            //startDestination = ScreensConstants.ROUTE_MAIN_SCREEN,
-                            // TODO добавить splash screen
                             startDestination = ScreensConstants.ROUTE_MAIN_SCREEN,
                         ) {
                             navigation(
@@ -54,8 +51,8 @@ class MainActivity : ComponentActivity() {
                                 route = ScreensConstants.ROUTE_MAIN_SCREEN,
                             ) {
                                 createMainScreenNavGraph(
-                                    selectedGroup = { groupName ->
-                                        appState.navigateToScheduleViewer(groupName)
+                                    selectedGroup = { id ->
+                                        appState.navigateToScheduleViewer(id)
                                     }
                                 )
                             }

@@ -2,22 +2,22 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "484d9d41e03a9198dab3637ed7681b90",
+    "identityHash": "636b8da81d3331fabc815f068afa1e6e",
     "entities": [
       {
         "tableName": "bookmarks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`groupName` TEXT NOT NULL, PRIMARY KEY(`groupName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
-            "fieldPath": "groupName",
-            "columnName": "groupName",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
             "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "groupName"
+            "uuid"
           ],
           "autoGenerate": false
         },
@@ -28,7 +28,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '484d9d41e03a9198dab3637ed7681b90')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '636b8da81d3331fabc815f068afa1e6e')"
     ]
   }
 }

@@ -1,5 +1,6 @@
 package ru.crazy_what.bmstu_shedule.domain.model
 
+import android.annotation.SuppressLint
 import ru.crazy_what.bmstu_shedule.data.getMonday
 import ru.crazy_what.bmstu_shedule.data.getTimeBetween
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
@@ -7,10 +8,15 @@ import ru.crazy_what.bmstu_shedule.date.Time
 import ru.crazy_what.bmstu_shedule.date.WeekType
 import java.util.*
 
+// TODO нужно переделать
+// TODO вынести логику работы с текущей датой в другое место (можно куда-нибудь в ViewModel или слой domain)
+// TODO нужно добавить куда-то uuid
 // По сравнению с SimpleGroupSchedule, уже полноценное расписание
 interface GroupSchedule {
 
     val groupName: String
+
+    val uuid: String
 
     val start: Calendar
 
@@ -43,6 +49,9 @@ class GroupScheduleImpl(
 
     override val groupName: String
         get() = schedule.groupName
+
+    override val uuid: String
+        get() = schedule.uuid
 
     // При установке currentTime нужно:
     // 1. Получаем расписание на день, соответствующий currentTime
@@ -114,6 +123,7 @@ class GroupScheduleImpl(
     private fun Time.toScheduleTime(): String = (if (this.hours != 0) "${this.hours}ч " else "") +
             (if (this.minutes != 0) "${this.minutes}мин" else "")
 
+    @SuppressLint("Range")
     private fun setMessage() {
         val year = currentTime.get(Calendar.YEAR)
         val month = currentTime.get(Calendar.MONTH)

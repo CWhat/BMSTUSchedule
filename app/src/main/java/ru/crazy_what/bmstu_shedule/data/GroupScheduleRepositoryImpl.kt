@@ -1,6 +1,6 @@
 package ru.crazy_what.bmstu_shedule.data
-
-import ru.crazy_what.bmstu_shedule.common.Group
+/*
+import ru.crazy_what.bmstu_shedule.domain.model.Group
 import ru.crazy_what.bmstu_shedule.common.ResponseResult
 import ru.crazy_what.bmstu_shedule.common.handleApi
 import ru.crazy_what.bmstu_shedule.data.remote.ScheduleService
@@ -10,7 +10,7 @@ import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 import ru.crazy_what.bmstu_shedule.domain.model.GroupScheduleImpl
-import ru.crazy_what.bmstu_shedule.domain.model.SimpleGroupSchedule
+import ru.crazy_what.bmstu_shedule.domain.model.SimpleSchedule
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,6 +18,7 @@ import javax.inject.Inject
 import ru.crazy_what.bmstu_shedule.data.remote.model.Group as RemoteGroup
 import ru.crazy_what.bmstu_shedule.data.remote.model.GroupSchedule as RemoteGroupSchedule
 
+// TODO переписать
 class GroupScheduleRepositoryImpl @Inject constructor(
     private val scheduleService: ScheduleService,
 ) : GroupScheduleRepository {
@@ -25,8 +26,8 @@ class GroupScheduleRepositoryImpl @Inject constructor(
     // TODO небезопасно, может читаться из нескольких потоков
     private var groups: List<RemoteGroup>? = null
 
-    override suspend fun searchScheduleByGroupName(
-        groupName: String,
+    override suspend fun getSchedule(
+        uuid: String,
     ): ResponseResult<GroupSchedule> {
         when (val locGroups = getGroups()) {
             is ResponseResult.Error -> return ResponseResult.error(locGroups.message)
@@ -55,11 +56,12 @@ class GroupScheduleRepositoryImpl @Inject constructor(
                 groups = networkGroups
                 ResponseResult.success(networkGroups)
             }
+
             is ResponseResult.Error -> ResponseResult.error(result.message)
         }
     }
 
-    override suspend fun getAllGroupsName(): ResponseResult<List<Group>> {
+    override suspend fun getAllGroups(): ResponseResult<List<Group>> {
         return when (val result = getGroups()) {
             is ResponseResult.Success -> ResponseResult.success(result.data.map { it.name })
             is ResponseResult.Error -> ResponseResult.error(result.message)
@@ -109,7 +111,7 @@ class GroupScheduleRepositoryImpl @Inject constructor(
                     time = formatter.parse(this@toGroupSchedule.semesterEnd)!!
                 },
                 currentTime = Calendar.getInstance(),
-                schedule = SimpleGroupSchedule(
+                schedule = SimpleSchedule(
                     groupName = this.group.name,
                     lessons = lessons,
                 )
@@ -117,4 +119,4 @@ class GroupScheduleRepositoryImpl @Inject constructor(
         }
 
     }
-}
+}*/

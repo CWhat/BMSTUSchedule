@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -28,7 +29,7 @@ fun SearchTab(
             Column(modifier = Modifier.fillMaxSize()) {
                 SimpleBasicTopAppBar(title = "Ошибка")
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Что-то пошло не так: ${state.message}")
+                    Text("Что-то пошло не так: ${state.message}", textAlign = TextAlign.Center)
                 }
             }
         }
@@ -43,7 +44,7 @@ fun SearchTab(
 }
 
 fun NavGraphBuilder.addSearchTab(
-    selectedGroup: (groupName: String) -> Unit,
+    selectedGroup: (id: String) -> Unit,
 ) {
     composable(route = TabsConstants.ROUTE_SEARCH_TAB) { navBackStackEntry ->
         Column(modifier = Modifier.fillMaxSize()) {

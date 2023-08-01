@@ -11,8 +11,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.crazy_what.bmstu_shedule.BuildConfig
+import ru.crazy_what.bmstu_shedule.data.SettingsRepositoryImpl
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.data.GroupScheduleRepositoryImpl
+import ru.crazy_what.bmstu_shedule.data.FakeGroupScheduleRepositoryImpl
 import ru.crazy_what.bmstu_shedule.data.db.BookmarksDao
 import ru.crazy_what.bmstu_shedule.data.db.BookmarksDatabase
 import ru.crazy_what.bmstu_shedule.data.db.BookmarksRepositoryImpl
@@ -20,6 +21,7 @@ import ru.crazy_what.bmstu_shedule.data.db.LessonsDatabase
 import ru.crazy_what.bmstu_shedule.data.remote.ScheduleService
 import ru.crazy_what.bmstu_shedule.domain.repository.BookmarksRepository
 import ru.crazy_what.bmstu_shedule.domain.repository.GroupScheduleRepository
+import ru.crazy_what.bmstu_shedule.domain.repository.SettingsRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -68,11 +70,20 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBookmarksRepository(bookmarksDao: BookmarksDao): BookmarksRepository =
-        BookmarksRepositoryImpl(bookmarksDao)
+    // TODO поменять
+        //BookmarksRepositoryImpl(bookmarksDao)
+        BookmarksRepositoryImpl()
 
     @Provides
     @Singleton
     fun provideGroupScheduleRepository(scheduleService: ScheduleService): GroupScheduleRepository =
-        GroupScheduleRepositoryImpl(scheduleService)
+    // TODO поменять
+        //GroupScheduleRepositoryImpl(scheduleService)
+        FakeGroupScheduleRepositoryImpl()
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository =
+        SettingsRepositoryImpl(context)
 
 }

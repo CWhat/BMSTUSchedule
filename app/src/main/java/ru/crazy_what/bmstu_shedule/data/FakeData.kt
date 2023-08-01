@@ -7,11 +7,12 @@ import ru.crazy_what.bmstu_shedule.domain.model.GroupLesson
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 import ru.crazy_what.bmstu_shedule.domain.model.GroupScheduleImpl
 import ru.crazy_what.bmstu_shedule.domain.model.SimpleGroupSchedule
-import java.util.*
+import java.util.Calendar
 
-fun fakeData(groupName: String): GroupSchedule {
+fun fakeData(groupName: String, uuid: String): GroupSchedule {
     val fakeData = SimpleGroupSchedule(
         groupName = groupName,
+        uuid = uuid,
         lessons = mapOf(
             // Понедельник
             WeekType.NUMERATOR to DayOfWeek.MONDAY to listOf(

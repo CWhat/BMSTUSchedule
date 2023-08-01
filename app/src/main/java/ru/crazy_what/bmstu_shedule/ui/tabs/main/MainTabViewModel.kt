@@ -29,6 +29,7 @@ class MainTabViewModel @Inject constructor(
     private fun loadMainGroupName() {
         getMainGroup().onEach { result ->
             when (result) {
+                // TODO делать проверку на null, если пришло null, то перенаправлять на выбор основной группы
                 is Resource.Success -> result.data?.let { getSchedule(it) }
                 is Resource.Loading -> _state.value = MainState.Loading
                 is Resource.Error -> result.message?.let { _state.value = MainState.Error(it) }
@@ -36,15 +37,17 @@ class MainTabViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getSchedule(group: String) {
-        getGroupSchedule(group).onEach { result ->
+    private fun getSchedule(groupUuid: String) {
+        getGroupSchedule(groupUuid).onEach { result ->
             when (result) {
-                is Resource.Success -> result.data?.let {
-                    _state.value = MainState.MainGroup(group, result.data)
+                is Resource.Success -> result.data?.let { schedule ->
+                    _state.value = MainState.MainGroup(schedule.groupName, schedule)
                 }
+
                 is Resource.Error -> result.message?.let {
                     _state.value = MainState.Error(it)
                 }
+
                 is Resource.Loading -> _state.value = MainState.Loading
             }
         }.launchIn(viewModelScope)

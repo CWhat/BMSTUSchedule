@@ -5,15 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ru.crazy_what.bmstu_shedule.common.Constants
-import ru.crazy_what.bmstu_shedule.common.Group
 import ru.crazy_what.bmstu_shedule.data.db.converters.DayOfWeakConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.SimpleListConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.TimeConverter
 import ru.crazy_what.bmstu_shedule.data.db.converters.WeekTypeConverter
-import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.date.DayOfWeek
 import ru.crazy_what.bmstu_shedule.date.Time
+import ru.crazy_what.bmstu_shedule.date.WeekType
 
+// TODO добавить UUID группы и преподавателя
 @Entity(
     tableName = Constants.LESSONS_DATABASE,
 )
@@ -34,7 +34,7 @@ data class LessonDb(
     val cabinet: String,
 
     @ColumnInfo(name = Constants.GROUPS_COLUMN_NAME)
-    val groups: List<Group>,
+    val groups: List<String>,
     val teachers: List<String>,
 
     @PrimaryKey(autoGenerate = true)

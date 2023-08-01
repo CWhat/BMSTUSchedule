@@ -56,6 +56,8 @@ fun GroupScheduleViewer(
                 value = GroupLessonsListState.Lessons(schedule)
             }
 
+        // TODO добавить повторную попытку при ошибке
+
         LessonsList(state = schedule.value)
     }
 }
@@ -63,7 +65,7 @@ fun GroupScheduleViewer(
 @Preview(showSystemUi = true)
 @Composable
 fun GroupScheduleViewerPrev() {
-    val groupSchedule = remember { fakeData("ФН2-61Б") }
+    val groupSchedule = remember { fakeData("ФН2-61Б", "") }
 
     BMSTUScheduleTheme(darkTheme = false) {
         GroupScheduleViewer(

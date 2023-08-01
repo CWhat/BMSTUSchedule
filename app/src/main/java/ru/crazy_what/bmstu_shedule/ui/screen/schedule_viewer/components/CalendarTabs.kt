@@ -1,29 +1,40 @@
 package ru.crazy_what.bmstu_shedule.ui.screen.schedule_viewer.components
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import ru.crazy_what.bmstu_shedule.date.WeekType
 import ru.crazy_what.bmstu_shedule.ui.theme.littleTitleStyle
-import java.util.*
+import java.util.Calendar
 import kotlin.math.absoluteValue
 import kotlin.math.round
 
-@OptIn(ExperimentalPagerApi::class, FlowPreview::class)
+@OptIn(FlowPreview::class, ExperimentalFoundationApi::class)
 @Composable
 fun CalendarTabs(
     modifier: Modifier = Modifier,
@@ -43,7 +54,7 @@ fun CalendarTabs(
 
     val daysOffset by remember {
         derivedStateOf {
-            round((daysState.currentPage + daysState.currentPageOffset) * 40) / 40
+            round((daysState.currentPage + daysState.currentPageOffsetFraction) * 40) / 40
         }
     }
 
@@ -83,13 +94,15 @@ fun CalendarTabs(
 
     Column(modifier = modifier) {
         HorizontalPager(
-            count = helper.weeksCount,
+            pageCount = helper.weeksCount,
             state = weeksState,
         ) { weekNum ->
             val weekInfo = remember { helper.weekInfo(weekNum) }
 
-            Column(modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
                     modifier = Modifier
                         .padding(top = 4.dp)
@@ -141,7 +154,7 @@ fun CalendarTabs(
         }
 
         HorizontalPager(
-            count = helper.daysCount,
+            pageCount = helper.daysCount,
             state = daysState,
         ) { dayNum ->
             //val date = remember(dayNum) { helper.dayNumToDate(dayNum) }

@@ -23,6 +23,7 @@ class ScheduleScreenViewModel @Inject constructor(
     private val _isBookmark = mutableStateOf(false)
     val isBookmarks: State<Boolean> = _isBookmark
 
+    // TODO реализовать нормальный вывод
     private val _groupName = mutableStateOf("ФН2-32Б")
     val groupName: State<String> = _groupName
 
@@ -31,11 +32,9 @@ class ScheduleScreenViewModel @Inject constructor(
     val state: State<ScheduleViewerState> = _state
 
     init {
-        // TODO если группа не указана, то надо или показывать сообщение об ошибке, или падать
-        savedStateHandle.get<String>(Constants.PARAM_GROUP_NAME)
-            ?.let { groupName -> _groupName.value = groupName }
-
-        getSchedule(groupName.value)
+        // TODO передавать не только uuid, но и имя группы (тогда можно сразу устанавливать группу, не дожидаясь загрузки расписания)
+        savedStateHandle.get<String>(Constants.PARAM_GROUP_UUID)
+            ?.let { groupUuid -> getSchedule(groupUuid) }
     }
 
     // TODO стоит переименовать
@@ -47,8 +46,9 @@ class ScheduleScreenViewModel @Inject constructor(
     private fun getSchedule(group: String) {
         getGroupSchedule(group).onEach { result ->
             when (result) {
-                is Resource.Success -> result.data?.let {
-                    _state.value = ScheduleViewerState.Schedule(result.data)
+                is Resource.Success -> result.data?.let { schedule ->
+                    _state.value = ScheduleViewerState.Schedule(schedule)
+                    _groupName.value = schedule.groupName
                 }
                 is Resource.Error -> result.message?.let {
                     _state.value = ScheduleViewerState.Error(it)

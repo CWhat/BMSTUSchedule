@@ -29,9 +29,9 @@ import javax.inject.Inject
 
 class GetGroupSchedule @Inject constructor(private val groupScheduleRepository: GroupScheduleRepository) {
 
-    operator fun invoke(group: String): Flow<Resource<GroupSchedule>> = flow {
+    operator fun invoke(uuid: String): Flow<Resource<GroupSchedule>> = flow {
         emit(Resource.Loading())
-        when (val groupScheduleResult = groupScheduleRepository.searchScheduleByGroupName(group)) {
+        when (val groupScheduleResult = groupScheduleRepository.getSchedule(uuid)) {
             is ResponseResult.Success -> emit(Resource.Success(groupScheduleResult.data))
             is ResponseResult.Error -> emit(Resource.Error(groupScheduleResult.message))
         }

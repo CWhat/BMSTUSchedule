@@ -82,6 +82,7 @@ fun RoundedColumn(
                     bottomStart = cardCorner,
                     bottomEnd = cardCorner
                 )
+
                 else -> RoundedCornerShape(0.dp)
             }
             val padding = when (num) {
@@ -91,15 +92,18 @@ fun RoundedColumn(
                     top = sidePaddingOfCard * 2,
                     bottom = 1.dp,
                 )
+
                 count - 1 -> PaddingValues(
                     start = sidePaddingOfCard,
                     end = sidePaddingOfCard,
                     top = 1.dp,
                     bottom = sidePaddingOfCard * 2,
                 )
+
                 else -> PaddingValues(
                     horizontal = sidePaddingOfCard,
-                    vertical = 1.dp)
+                    vertical = 1.dp,
+                )
             }
             Card(
                 modifier = Modifier
@@ -119,12 +123,11 @@ fun RoundedColumn(
     }
 }
 
-// TODO добавить Modifier в параметры функции
 @Composable
 fun SimpleList(
-    modifier: Modifier = Modifier,
     items: List<String>,
     onClickItem: (num: Int, item: String) -> Unit,
+    modifier: Modifier = Modifier,
     placeholder: @Composable () -> Unit = {},
 ) {
     RoundedColumn(
@@ -136,6 +139,35 @@ fun SimpleList(
             Text(
                 modifier = Modifier.align(Alignment.CenterStart),
                 text = items[num],
+                style = titleStyle
+            )
+
+            SquareIcon(
+                imageVector = Icons.Filled.ArrowForward,
+                contentDescription = "forward",
+                modifier = Modifier.align(Alignment.CenterEnd),
+            )
+        }
+    }
+}
+
+// items - список пар вида (name, id)
+@Composable
+fun SimpleList(
+    items: List<Pair<String, String>>,
+    onClickItem: (id: String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: @Composable () -> Unit = {},
+) {
+    RoundedColumn(
+        modifier = modifier,
+        count = items.size,
+        placeholder = placeholder,
+        onClickItem = { num -> onClickItem(items[num].second) }) { num ->
+        Box(modifier = Modifier.padding(16.dp, 8.dp)) {
+            Text(
+                modifier = Modifier.align(Alignment.CenterStart),
+                text = items[num].first,
                 style = titleStyle
             )
 

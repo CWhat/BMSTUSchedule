@@ -1,13 +1,18 @@
 package ru.crazy_what.bmstu_shedule.domain.repository
 
-import ru.crazy_what.bmstu_shedule.common.Group
+import ru.crazy_what.bmstu_shedule.domain.model.Group
 import ru.crazy_what.bmstu_shedule.common.ResponseResult
 import ru.crazy_what.bmstu_shedule.domain.model.GroupSchedule
 
 interface GroupScheduleRepository {
 
     // TODO возвращать SimpleGroupSchedule
-    suspend fun searchScheduleByGroupName(groupName: String): ResponseResult<GroupSchedule>
+    // TODO нужно искать по id или возвращать список
+    suspend fun getSchedule(uuid: String): ResponseResult<GroupSchedule>
 
-    suspend fun getAllGroupsName(): ResponseResult<List<Group>>
+    suspend fun getAllGroups(): ResponseResult<List<Group>>
+
+    // TODO реализовать
+    // checkUpdates
+    // loadUpdates
 }
